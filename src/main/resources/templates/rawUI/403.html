@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html   xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org" >
+<head>
+  <title>403 Forbidden</title>
+  <style>
+    body {
+      background-color: #f8f8f8;
+      color: #333333;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #333333;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      color: #ffffff;
+      font-size: 18px;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0062cc;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>403 Forbidden</h1>
+  <p>You do not have permission to access this resource.</p>
+  <a href="/rawUI/">Go to Homepage</a>
+  <br />
+  <a href="javascript:history.back()">Go Back</a>
+  <br />
+  <a href="javascript:location.reload()">Refresh</a>
+  <br />
+  <a href="mailto:nguyenducbaokey@gmail.com">Contact Support</a>
+  <br />
+  <a th:href="@{/rawUI/login}" class="btn">Login</a>
+</div>
+</body>
+</html>

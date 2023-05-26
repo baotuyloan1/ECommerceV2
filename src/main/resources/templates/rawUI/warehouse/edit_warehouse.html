@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div align="center">
+  <h1>Edit Warehouse</h1>
+  <form th:action="@{'/rawUI/admin/warehouses/updateWarehouse'}" th:object="${warehouseDto}" method="post">
+    <table th:border="0" th:cellpadding="10">
+      <input type="hidden" th:field="*{id}"/>
+      <input type="hidden" th:field="*{createTime}"/>
+      <tr>
+        <td><label>Warehouse Name:
+          <input type="text" th:field="*{warehouseName}"/>
+        </label></td>
+      </tr>
+      <tr>
+        <td><label>Address:
+          <input type="text" th:field="*{address}"/>
+        </label></td>
+      </tr>
+      <tr>
+        <td><label>Phone:
+          <input type="number" th:field="*{phone}"/>
+        </label></td>
+      </tr>
+      <tr>
+        <td>
+          <button type="submit">Update Warehouse</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

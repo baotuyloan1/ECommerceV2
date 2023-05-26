@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Phone</title>
+</head>
+<style>
+    img {
+        height: 100px;
+        width: auto;
+    }
+</style>
+<body>
+<div align="center">
+    <h1>Update Phone</h1>
+    <br/>
+    <form th:action="@{'/rawUI/products/updatePhone'}" th:object="${phoneDto}" method="post"
+          enctype="multipart/form-data">
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Product Name:</td>
+                <td><input type="text" th:field="*{name}"/></td>
+            </tr>
+            <tr>
+                <td>Old Image:</td>
+                <td><img th:src="@{${phoneDto.photoImagePath}}"/></td>
+            </tr>
+            <input type="hidden" th:field="*{image}"/>
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{createTime}"/>
+            <tr>
+                <td>New Image:</td>
+                <td><input type="file" name="imageProduct" accept="image/png, image/jpeg"/></td>
+            </tr>
+
+
+
+            <tr>
+                <td>Image details:</td>
+                <td><img  th:each="item : ${phoneDto.imageDetailDtoSet}" th:src="@{${item.photoImagePath}}"/> </td>
+            </tr>
+            <tr>
+                <td>Brand:</td>
+                <td>
+                    <select th:field="*{brandDto}">
+                        <option th:each="brandItem : ${brandDtoList}" th:value="${brandItem.id}"
+                                th:text="${brandItem.id +' - '+brandItem.name}"></option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Category:</td>
+                <td>
+                    <select th:field="*{categoryDto}">
+                        <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}" >
+                            <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}"  th:if="${categoryDto.level > 0}">*</p>
+                            <span th:text="${categoryDto.name + categoryDto.id}"/>
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td>
+                    <input type="text" th:field="*{description}">
+                </td>
+            </tr>
+            <tr>
+                <td>Price:</td>
+                <td><input type="number" th:field="*{price}"/></td>
+            </tr>
+            <tr>
+                <td>Screen:</td>
+                <td><input type="text" th:field="*{screen}"/></td>
+            </tr>
+
+            <tr>
+                <td>Ram:</td>
+                <td><input type="text" th:field="*{ram}"/></td>
+            </tr>
+
+            <tr>
+                <td>Camera:</td>
+                <td><input type="text" th:field="*{camera}"/></td>
+            </tr>
+
+            <tr>
+                <td>BatteryCharge:</td>
+                <td><input type="text" th:field="*{batteryCharge}"/></td>
+            </tr>
+            <tr>
+                <td>Operating System:</td>
+                <td><input type="text" th:field="*{operatingSystem}"/></td>
+            </tr>
+
+            <tr>
+                <td>Storage Capacity:</td>
+                <td><input type="text" th:field="*{storageCapacity}"/></td>
+            </tr>
+
+            <tr>
+                <td>Front Facing Camera:</td>
+                <td><input type="text" th:field="*{frontFacingCamera}"/></td>
+            </tr>
+
+            <tr>
+                <td>Rear Camera:</td>
+                <td><input type="text" th:field="*{rearCamera}"/></td>
+            </tr>
+
+            <tr>
+                <td>Chip:</td>
+                <td><input type="text" th:field="*{chip}"/></td>
+            </tr>
+
+            <tr>
+                <td>Sim:</td>
+                <td><input type="text" th:field="*{sim}"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

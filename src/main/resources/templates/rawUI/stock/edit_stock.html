@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .error {
+        color: red;
+        font-style: italic;
+    }
+</style>
+<body>
+<div align="center">
+    <h1>Edit Stock</h1>
+    <form th:action="@{'/rawUI/manager/stocks/updateStock'}" th:object="${stockDto}" method="post">
+        <table th:border="0" th:cellpadding="10">
+            <input type="hidden" name="oldProductId" th:value="${oldProductId}">
+            <input type="hidden" name="oldWarehouseId" th:value="${oldWarehouseId}">
+            <input type="hidden" th:field="*{createTime}">
+
+            <td class="error" th:if="${existedMessage}" th:text="${existedMessage}"></td>
+            <tr>
+                <td><label>Product ID:
+                    <select th:field="*{productId}">
+                        <option th:each="product : ${productList}" th:value="${product.id}"
+                                th:text="${product.id+' - '+product.name}"></option>
+
+                    </select>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label>Warehouse Id:
+                    <select th:field="*{warehouseId}">
+                        <option th:each="warehouse : ${warehouseList}" th:value="${warehouse.id}"
+                                th:text="${warehouse.id+' - '+warehouse.warehouseName}"></option>
+
+                    </select>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label>Quantity In Stock
+                    <input type="number" th:field="*{quantityInStock}"/>
+                </label></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Update Stock</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
+<body>
+<div align="center">
+
+
+    <div th:if="${#httpServletRequest.userPrincipal != null }">
+        <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
+
+        <div th:if="${#authentication.getAuthorities() != null}">
+            <p>Roles: <span th:each="authority : ${#authentication.getAuthorities()}"
+                            th:text="${authority.getAuthority()} + '    '"></span></p>
+        </div>
+
+        <form th:action="@{/rawUI/logout}" method="post">
+            <input type="submit" value="Logout">
+        </form>
+
+
+    </div>
+
+    <div>
+        <h1>List Brands</h1>
+        <div>
+            <a href="/rawUI/brands/createBrand">Add new Brand</a>
+        </div>
+        <div>
+            <a href="/rawUI/">Dashboard</a>
+        </div>
+        <br/>
+        <br/>
+        <form></form>
+        <select id="itemsNumberSelect" onchange="updateUrl(this)">
+            <option value="5">5 items per page</option>
+            <option value="10">10 items per page</option>
+            <option value="20">20 items per page</option>
+            <option value="50">50 items per page</option>
+        </select>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a th:href="@{'/rawUI/brands/'+${currentPage} +'?sortField=id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Brand ID</a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/brands/'+${currentPage} +'?sortField=name&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">Name</a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/brands/'+${currentPage} +'?sortField=description&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Description</a></th>
+                <th>
+                    <a th:href="@{'/rawUI/brands/'+${currentPage} +'?sortField=createTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Create Time</a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/brands/'+${currentPage} +'?sortField=updateTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">Update Time</a>
+                </th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(listBrands)}">
+                <tbody>
+                <tr th:each="brand : ${listBrands}">
+                    <td th:text="${brand.id}">Brand ID</td>
+                    <td th:text="${brand.name}">Name</td>
+                    <td th:text="${brand.description}">description</td>
+                    <td th:text="${brand.createTime}">Create time</td>
+                    <td th:text="${brand.updateTime == null ? 'never updated' : brand.updateTime}">Update time</td>
+                    <td th:if="${currentRoles.contains('ADMIN') || currentRoles.contains('MANAGER')}">
+                        <a th:href="@{'/rawUI/brands/editBrand/' + ${brand.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/brands/deleteBrand/' + ${brand.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${!currentRoles.contains('ADMIN') && !currentRoles.contains('MANAGER')}">
+                        <p>Only ADMIN or MANAGER can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+        <br/>
+        <br/>
+        <a th:if="${currentPage > 1}"
+           th:href="@{'/rawUI/brands/1'+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">First</a>
+        <span th:if="${currentPage < 2}">First</span>
+
+        <a th:if="${currentPage > 1}"
+           th:href="@{'/rawUI/brands/'+${currentPage - 1} +'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Previous</a>
+        <span th:if="${currentPage < 2}">Previous</span>
+
+        <span th:each="i : ${#numbers.sequence(1,totalPages)}">
+            <a th:if="${currentPage != i}"
+               th:href="@{'/rawUI/brands/'+${i}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">[[${i}]]</a>
+            <span th:if="${currentPage == i}">[[${i}]]</span>
+            &nbsp;
+        </span>
+
+        <a th:if="${currentPage < totalPages}"
+           th:href="@{'/rawUI/brands/'+${currentPage+1}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Next</a>
+        <span th:if="${currentPage >= totalPages}">Next</span>
+
+        <a th:if="${currentPage < totalPages}"
+           th:href="@{'/rawUI/brands/'+${totalPages}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Last</a>
+        <span th:if="${currentPage >= totalPages}">Last</span>
+    </div>
+</div>
+
+</body>
+
+
+<script type="text/javascript">
+    // Hàm hỗ trợ lấy giá trị của tham số từ URL
+    function getUrlParam(paramName) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(paramName);
+    }
+
+    const currentItemsNumber = getUrlParam('itemsNumber');
+    const selectElement = document.getElementById("itemsNumberSelect");
+    console.log(currentItemsNumber)
+    if (currentItemsNumber == null) {
+        selectElement.value = 5;
+    } else {
+        selectElement.value = currentItemsNumber;
+    }
+    document.getElementById('btnClear').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        window.location.href = "/rawUI/brands/1";
+    });
+
+    function updateUrl(select) {
+        let selectedValue = select.value;
+        window.location.href = "/rawUI/brands/1?itemsNumber=" + selectedValue;
+    }
+</script>
+</html>

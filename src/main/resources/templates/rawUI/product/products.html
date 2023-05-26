@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product management</title>
+</head>
+
+<style>
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
+<body>
+<div align="center">
+
+    <form th:action="@{/rawUI/products/1}">
+        Filter:<input type="text" size="50" th:value="${keyword}" name="keyword" id="keyword" required>
+        &nbsp;
+        <input type="submit" value="Search"/>
+        &nbsp;
+        <input type="button" value="Clear" id="btnClear"
+        />
+    </form>
+
+    <div th:if="${#httpServletRequest.userPrincipal != null }">
+        <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
+
+        <div th:if="${#authentication.getAuthorities() != null}">
+            <p>Roles: <span th:each="authority : ${#authentication.getAuthorities()}"
+                            th:text="${authority.getAuthority()} + '    '"></span></p>
+        </div>
+
+        <form th:action="@{/rawUI/logout}" method="post">
+            <input type="submit" value="Logout">
+        </form>
+
+    </div>
+    <div th:if="${#httpServletRequest.userPrincipal == null}">
+        <a href="/rawUI/login">Login</a>
+    </div>
+
+    <div th:if="${param.logoutStatus}">
+        <h3>You have been logged out</h3>
+    </div>
+
+    <div>
+        <a href="/rawUI/">Home Page</a>
+    </div>
+
+    <div>
+        <h1>List Products</h1>
+        <div>
+            <a href="/rawUI/products/phones">View Phones</a>
+        </div>
+
+        <div>
+            <a href="/rawUI/products/laptops">View Laptop</a>
+        </div>
+
+        <div>
+            <div>
+                <a href="/rawUI/products/newPhone">Add new Phone</a>
+            </div>
+
+            <div>
+                <a href="/rawUI/products/newLaptop">Add new Laptop</a>
+            </div>
+            <br/>
+            <br/>
+
+            <div>
+                <select id="itemsNumberSelect" onchange="updateUrl(this)">
+                    <option value="5">5 items per page</option>
+                    <option value="10">10 items per page</option>
+                    <option value="20">20 items per page</option>
+                    <option value="50">50 items per page</option>
+                </select>
+
+                <br/>
+                <br/>
+
+
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                            Product ID</a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=name&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">Product
+                            name</a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=description&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                            Description</a></th>
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=price&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                            Price</a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=brand&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">Brand</a>
+                    </th>
+                    <th>
+                        Categories
+                    </th>
+
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=createTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                            Created Time</a>
+
+                    </th>
+
+                    <th>
+                        <a th:href="@{'/rawUI/products/'+${currentPage} +'?sortField=updateTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                            Updated Time</a>
+
+                    </th>
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+                </thead>
+
+                <div th:if="${not #lists.isEmpty(productDtoList)}">
+                    <tbody>
+                    <tr th:each="productDto : ${productDtoList}">
+                        <td th:text="${productDto.id}"/>
+                        <td th:text="${productDto.name}"/>
+                        <td th:text="${productDto.description}"/>
+                        <td th:text="${productDto.price}"/>
+                        <td th:text="${productDto.brandDto.name}"/>
+                        <td th:text="${productDto.categoryDto.name}"/>
+                        <td th:text="${productDto.createTime}">createTime</td>
+                        <td th:text="${productDto.updateTime}">updateTime</td>
+                        <td>
+                            <a th:href="@{'/rawUI/products/editProduct/' + ${productDto.id}}">Edit</a>
+                            <a th:href="@{'/rawUI/products/deleteProduct/' + ${productDto.id}}">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </div>
+            </table>
+            <br/>
+            <br/>
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/rawUI/products/1'+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">First</a>
+            <span th:if="${currentPage < 2}">First</span>
+
+            <a th:if="${currentPage > 1}"
+               th:href="@{'/rawUI/products/'+${currentPage - 1} +'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Previous</a>
+            <span th:if="${currentPage < 2}">Previous</span>
+
+            <span th:if="${totalPages > 0}">
+        <span th:each="i : ${#numbers.sequence(1,totalPages)}">
+            <a th:if="${currentPage != i}"
+               th:href="@{'/rawUI/products/'+${i}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">[[${i}]]</a>
+            <span th:if="${currentPage == i}">[[${i}]]</span>
+        </span>
+        </span>
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/rawUI/products/'+${currentPage+1}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Next</a>
+            <span th:if="${currentPage >= totalPages}">Next</span>
+
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{'/rawUI/products/'+${totalPages}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Last</a>
+            <span th:if="${currentPage >= totalPages}">Last</span>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    // Hàm hỗ trợ lấy giá trị của tham số từ URL
+    function getUrlParam(paramName) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(paramName);
+    }
+
+    const currentItemsNumber = getUrlParam('itemsNumber');
+    const selectElement = document.getElementById("itemsNumberSelect");
+    console.log(currentItemsNumber)
+    if (currentItemsNumber == null) {
+        selectElement.value = 10;
+    } else {
+        selectElement.value = currentItemsNumber;
+    }
+    document.getElementById('btnClear').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        window.location.href = "/rawUI/products/1";
+    });
+
+    function updateUrl(select) {
+        let selectedValue = select.value;
+        window.location.href = "/rawUI/products/1?itemsNumber=" + selectedValue;
+    }
+</script>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Brand</title>
+</head>
+<body>
+<div th:align="center">
+    <h1>Create New Brand</h1>
+    <br/>
+    <form th:action="@{'/rawUI/brands/saveBrand'}" th:object="${brand}" method="post">
+        <table th:border="0" th:cellpadding="10">
+            <tr>
+                <td><label>Brand name:
+                    <input type="text" th:field="*{name}"/>
+                </label></td>
+            </tr>
+            <tr>
+                <td><label>Description:
+                    <input type="text" th:field="*{description}"/>
+                </label></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Save Brand</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

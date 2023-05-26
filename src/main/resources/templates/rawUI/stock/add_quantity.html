@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Add quantitty</title>
+</head>
+<body>
+<div align="center">
+    <h1>Add quantity</h1>
+    <form th:action="@{'/rawUI/manager/stocks/addQuantity'}" th:object="${quantityDto}" method="post">
+        <table th:border="0" th:cellpadding="10">
+            <tr>
+                <td><label>Product ID:
+                    <input type="number" name="productId" th:value="${productId}" readonly />
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label>Warehouse Id:
+                    <input type="number" name="warehouseId" th:value="${warehouseId}" readonly/>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label>Quantity In Stock
+                    <input type="number" th:field="*{quantity}" />
+                </label></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Save Warehouse</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>

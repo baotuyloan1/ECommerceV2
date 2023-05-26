@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Category</title>
+</head>
+<body>
+<div th:align="center">
+  <h1>Create New Category</h1>
+  <br/>
+  <form th:action="@{'/rawUI/categories/updateCategory/'+${category.id}}" th:object="${category}" method="post">
+    <table th:border="0" th:cellpadding="10">
+      <tr>
+        <td><label>Category name:
+          <input type="text" th:field="*{name}"/>
+        </label></td>
+      </tr>
+      <tr>
+        <td><label>Description:
+          <input type="text" th:field="*{description}"/>
+        </label></td>
+      </tr>
+      <tr>
+        <td>
+          <label>Parent Category:
+            <select th:field="*{parentCategory}">
+              <option th:text="root" th:value="${null}"></option>
+              <option th:each="categoryItem : ${categories}" th:value="${categoryItem.id}" th:text="${categoryItem.name}"></option>
+            </select>
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td><button type="submit">Save category</button></td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

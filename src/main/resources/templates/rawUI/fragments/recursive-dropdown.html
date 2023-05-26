@@ -1,0 +1,8 @@
+<ul>
+    <li th:each="category : ${categories}">
+        <a th:href="@{'/rawUI/product/category/' + ${category.id}}">Category ${category.id}</a>
+        <ul th:if="${category.subCategories}">
+            <li th:replace="fragments/recursive-dropdown :: dropdownMenu(categories=${category.subCategories})"></li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Manager</title>
+</head>
+
+<style>
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
+<body>
+<div align="center">
+    <div th:if="${#httpServletRequest.userPrincipal != null }">
+        <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
+
+        <div th:if="${#authentication.getAuthorities() != null}">
+            <p>Roles: <span th:each="authority : ${#authentication.getAuthorities()}"
+                            th:text="${authority.getAuthority()} + '    '"/></p>
+        </div>
+
+
+        <form th:action="@{/rawUI/logout}" method="post">
+            <input type="submit" value="Logout">
+        </form>
+
+    </div>
+    <div th:if="${#httpServletRequest.userPrincipal == null}">
+        <a href="/rawUI/login">Login</a>
+    </div>
+
+    <div th:if="${param.logoutStatus}">
+        <h3>You have been logged out</h3>
+    </div>
+
+
+    <div>
+        <h3>List Employees</h3>
+        <div>
+            <a href="/rawUI/admin/newEmployee">Add new Employee</a>
+            &nbsp;
+            <a href="/rawUI/admin/employees/1">View More</a>
+        </div>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a>
+                        Employee ID</a>
+                </th>
+                <th>
+                    <a>Email</a>
+                </th>
+                <th>Last Name</th>
+                <th>
+                    <a>First Name</a>
+                </th>
+                <th>Phone</th>
+                <th>Roles</th>
+                <th>Enabled</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(listEmployees)}">
+                <tbody>
+                <tr th:each="employee : ${listEmployees}">
+                    <td th:text="${employee.id}">Category ID</td>
+                    <td th:text="${employee.email}">Email</td>
+                    <td th:text="${employee.firstName}">First Name</td>
+                    <td th:text="${employee.lastName}">Last Name</td>
+                    <td th:text="${employee.phone}">Phone</td>
+                    <td th:text="${employee.roles}">Roles</td>
+                    <td th:text="${employee.enabled}">Enabled</td>
+                    <td th:if="${currentRoles.contains('ADMIN')}">
+                        <a th:href="@{'/rawUI/admin/editEmployee/' + ${employee.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/deleteEmployee/' + ${employee.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${not currentRoles.contains('ADMIN')}">
+                        <p>Only ADMIN can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
+    </div>
+
+    <div>
+        <h3>List Stocks</h3>
+        <div>
+            <a href="/rawUI/manager/stocks/newStock">Add new Stock</a>
+            &nbsp;
+            <a href="/rawUI/manager/stocks/1">View More</a>
+        </div>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+
+                    Stock ID
+                </th>
+                <th>
+                    Product Id
+                </th>
+                <th>Product Name</th>
+                <th>
+                    Warehouse Id
+                </th>
+                <th>
+                    <a>Warehouse Name</a>
+                </th>
+                <td>Employee ID created</td>
+                <td>Employee Name created</td>
+                <td>Employee ID updated</td>
+                <td>Employee Name updated</td>
+                <th>Quantity In Stock</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(stockList)}">
+                <tbody>
+                <tr th:each="stock : ${stockList}">
+                    <td th:text="${stock.id}"></td>
+                    <td th:text="${stock.id.product.id}"></td>
+                    <td th:text="${stock.id.product.name}"></td>
+                    <td th:text="${stock.id.warehouse.id}"></td>
+                    <td th:text="${stock.id.warehouse.warehouseName}"></td>
+                    <td th:text="${stock.createdEmployee.id}"></td>
+                    <td th:text="${stock.createdEmployee.lastName + stock.createdEmployee.firstName  }"></td>
+                    <td th:text="${stock.updatedEmployee.id }"></td>
+                    <td th:text="${stock.updatedEmployee.lastName + stock.updatedEmployee.firstName  }"></td>
+                    <td th:text="${stock.quantityInStock }"></td>
+
+                    <td th:if="${currentRoles.contains('ADMIN') or currentRoles.contains('MANAGER')}">
+                        <a th:href="@{'/rawUI/manager/stocks/editStock/' + ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/manager/stocks/deleteStock/' + ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${not currentRoles.contains('ADMIN') && not currentRoles.contains('MANAGER')}">
+                        <p>Only ADMIN OR Manager can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
+    </div>
+
+    <div>
+        <h3>List WareHouse</h3>
+        <div>
+            <a href="/rawUI/admin/warehouses/newWarehouse">Add new Warehouse</a>
+            &nbsp;
+            <a href="/rawUI/admin/warehouses/1">View More</a>
+        </div>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a>
+                        ID</a>
+                </th>
+                <th>
+                    <a>Address</a>
+                </th>
+                <th>Phone</th>
+                <th>
+                    <a>Name</a>
+                </th>
+                <th>Create Time</th>
+                <th>Update Time</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(warehouseList)}">
+                <tbody>
+                <tr th:each="warehouse : ${warehouseList}">
+                    <td th:text="${warehouse.id}"></td>
+                    <td th:text="${warehouse.address}"></td>
+                    <td th:text="${warehouse.phone}"></td>
+                    <td th:text="${warehouse.warehouseName}"></td>
+                    <td th:text="${warehouse.createTime}"></td>
+                    <td th:text="${warehouse.updateTime}"></td>
+
+                    <td th:if="${currentRoles.contains('ADMIN')}">
+                        <a th:href="@{'/rawUI/admin/warehouses/editWarehouse/' + ${warehouse.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/warehouses/deleteWarehouse/' + ${warehouse.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${not currentRoles.contains('ADMIN')}">
+                        <p>Only ADMIN can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
+    </div>
+
+    <div>
+        <h1>List Roles</h1>
+        <a href="/rawUI/admin/newRole">Add new Role</a>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a>
+                        Role ID</a>
+                </th>
+                <th>
+                    <a>Name</a>
+                </th>
+                <th>
+                    <a>Description</a>
+                </th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(listRoles)}">
+                <tbody>
+                <tr th:each="role : ${listRoles}">
+                    <td th:text="${role.id}">Category ID</td>
+                    <td th:text="${role.name}">Name</td>
+                    <td th:text="${role.description}">Description</td>
+                    <td th:if="${currentRoles.contains('ADMIN')}">
+                        <a th:href="@{'/rawUI/admin/editRole/' + ${role.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/deleteRole/' + ${role.id}}">Delete</a>
+                    </td>
+                    <td th:if="${not currentRoles.contains('ADMIN')}">
+                        <p>Only ADMIN can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
+    </div>
+    <h1>Category List</h1>
+    <div>
+        <a href="/rawUI/categories/createCategory">Create New Category</a>
+        &nbsp;
+        <a href="/rawUI/categories/">View More</a>
+    </div>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Category ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Parent ID
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <div th:if="${not #lists.isEmpty(listCategories)}">
+            <tbody>
+            <tr th:each="category : ${listCategories}">
+                <td th:text="${category.id}">Category ID</td>
+                <td th:text="${category.name}">Name</td>
+                <td th:text="${category.description}">Description</td>
+                <td th:text="${category.parentCategory == null ? 'null' : category.parentCategory.name}">Parent</td>
+                <td>
+                    <a th:href="@{'/rawUI/categories/editCategory/' + ${category.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/categories/deleteCategory/' + ${category.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <h1>Brands List</h1>
+    <div>
+        <a href="/rawUI/brands/createBrand">Create New Brand</a>
+        &nbsp;
+        <a href="/rawUI/brands/1">View More</a>
+    </div>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Brand ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Create Time
+                </a></th>
+            <th>
+                <a>Update Time
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <div th:if="${not #lists.isEmpty(listBrands)}">
+            <tbody>
+            <tr th:each="brand : ${listBrands}">
+                <td th:text="${brand.id}">Brand ID</td>
+                <td th:text="${brand.name}">Name</td>
+                <td th:text="${brand.description}">Description</td>
+                <td th:text="${brand.createTime == null ? 'null' : brand.createTime}">Create Time</td>
+                <td th:text="${brand.updateTime == null ? 'null' : brand.updateTime}">Update Time</td>
+                <td>
+                    <a th:href="@{'/rawUI/categories/editCategory/' + ${brand.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/categories/deleteCategory/' + ${brand.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <div>
+        <h1>Product List</h1>
+        <a href="/rawUI/products/1">View More</a>
+    </div>
+    <a href="/rawUI/products/newPhone">Create New Phone</a>
+    <a href="/rawUI/products/newTablet">Create New Tablet</a>
+    <a href="/rawUI/products/newLaptop">Create New Laptop</a>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Product ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Price
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <div th:if="${not #lists.isEmpty(listProducts)}">
+            <tbody>
+            <tr th:each="product : ${listProducts}">
+                <td th:text="${product.id}">Product ID</td>
+                <td th:text="${product.name}">Name</td>
+                <td th:text="${product.description}">Description</td>
+                <td th:text="${product.price}">Price</td>
+                <td>
+                    <a th:href="@{'/rawUI/products/editProduct/' + ${product.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/products/deleteProduct/' + ${product.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Product ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>CPU</a>
+            </th>
+            <th>
+                <a>RAM</a>
+            </th>
+            <th>
+                <a>Hard Drive
+                </a>
+            </th>
+            <th>
+                <a>Graphics Card</a>
+            </th>
+
+            <th>
+                <a>Operating System</a>
+            </th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <div th:if="${not #lists.isEmpty(listLaptops)}">
+            <tbody>
+            <tr th:each="laptop : ${listLaptops}">
+                <td th:text="${laptop.product.id}">Product ID</td>
+                <td th:text="${laptop.product.name}">Name</td>
+                <td th:text="${laptop.cpu}">Cpu</td>
+                <td th:text="${laptop.ram}">Ram</td>
+                <td th:text="${laptop.hardDrive}">Hard Drive</td>
+                <td th:text="${laptop.graphicsCard}">Graphics Card</td>
+                <td th:text="${laptop.operatingSystem}">Operating System</td>
+                <td>
+                    <a th:href="@{'/edit/' + ${laptop.id}}">Edit</a>
+                    <a th:href="@{'/delete/' + ${laptop.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+
+</div>
+</body>
+
+<!--<script type="text/javascript">-->
+<!--    function clearSearch() {-->
+<!--        window.location = "[[@{/}]]";-->
+<!--    }-->
+<!--</script>-->
+</html>

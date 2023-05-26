@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Laptop</title>
+</head>
+<style>
+  .error {
+    color: red;
+    font-style: italic;
+  }
+</style>
+<body>
+<div align="center">
+  <h1>Edit Laptop</h1>
+  <br/>
+  <form th:action="@{'/rawUI/products/updateLaptop'}" th:object="${laptopDto}" method="post"
+        enctype="multipart/form-data">
+    <table border="0" cellpadding="10">
+      <input type="hidden" th:field="*{productDto.image}"/>
+      <input type="hidden" th:field="*{productDto.id}"/>
+      <input type="hidden" th:field="*{productDto.createTime}"/>
+      <tr>
+        <td>Product Name:</td>
+        <td><input type="text" th:field="*{productDto.name}"/></td>
+        <td class="error" th:if="${#fields.hasErrors('productDto.name')}" th:errors="*{productDto.name}"></td>
+      </tr>
+
+      <tr>
+        <td>Old Image:</td>
+        <td><img th:src="@{${laptopDto.photoImagePath}}"/></td>
+      </tr>
+      <tr>
+        <td>Main Image:</td>
+        <td><input type="file" name="imageProduct" accept="image/png, image/jpeg"/></td>
+        <td th:if="${imageIsEmpty}" class="error" th:text="${imageEmptyError}"></td>
+      </tr>
+
+      <tr>
+        <td>Image details:</td>
+        <td><input type="file" name="imageDetailArray" accept="image/png, image/jpeg"/></td>
+        <td><input type="file" name="imageDetailArray" accept="image/png, image/jpeg"/></td>
+        <td><input type="file" name="imageDetailArray" accept="image/png, image/jpeg"/></td>
+      </tr>
+      <tr>
+        <td>Brand:</td>
+        <td>
+          <select th:field="*{productDto.brandDto}">
+            <option th:each="i : ${brandDtoList}" th:value="${i.id}" th:text="${i.name}"></option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Category:</td>
+        <td>
+          <select th:field="*{productDto.categoryDto}">
+            <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}" >
+              <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}"  th:if="${categoryDto.level > 0}">*</p>
+              <span th:text="${categoryDto.name + categoryDto.id}"/>
+            </option>
+          </select>
+        </td>
+        <td class="error" th:if="${#fields.hasErrors('productDto.categoryDto')}" th:errors="*{productDto.categoryDto}"></td>
+
+      </tr>
+      <tr>
+        <td>Description:</td>
+        <td>
+          <input type="text" th:field="*{productDto.description}">
+        </td>
+      </tr>
+      <tr>
+        <td>Price:</td>
+        <td><input type="number" th:field="*{productDto.price}"/></td>
+        <td th:if="${#fields.hasErrors('productDto.price')}" th:errors="*{productDto.price}" class="error"></td>
+      </tr>
+      <tr>
+        <td>Screen:</td>
+        <td><input type="text" th:field="*{screen}"/></td>
+      </tr>
+
+      <tr>
+        <td>Ram:</td>
+        <td><input type="text" th:field="*{ram}"/></td>
+      </tr>
+
+      <tr>
+        <td>Cpu:</td>
+        <td><input type="text" th:field="*{cpu}"/></td>
+      </tr>
+
+      <tr>
+        <td>HardDrive:</td>
+        <td><input type="text" th:field="*{hardDrive}"/></td>
+      </tr>
+      <tr>
+        <td>Operating System:</td>
+        <td><input type="text" th:field="*{operatingSystem}"/></td>
+      </tr>
+
+      <tr>
+        <td>Release Year:</td>
+        <td><input type="number" th:field="*{releaseYear}"/></td>
+      </tr>
+
+      <tr>
+        <td>Connector:</td>
+        <td><input type="text" th:field="*{connector}"/></td>
+      </tr>
+
+      <tr>
+        <td>Material</td>
+        <td><input type="text" th:field="*{material}"/></td>
+      </tr>
+
+      <tr>
+        <td>Size Weight:</td>
+        <td><input type="text" th:field="*{sizeWeight}"/></td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <button type="submit">Save</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>
