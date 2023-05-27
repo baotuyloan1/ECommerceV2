@@ -69,6 +69,6 @@ public interface StockRepository extends JpaRepository<Stock, StockID> {
       @Param("stockID") StockID newStockID, @Param("oldStockId") StockID oldStockID);
 
   @Query(
-      "SELECT DISTINCT s FROM Stock s JOIN s.id.product p JOIN p.categories c JOIN p.brand b WHERE CONCAT(s.id.product.name,' ',s.id.product.description, ' ' , s.id.warehouse.warehouseName, ' ' ,s.createdEmployee.firstName,' ', s.createdEmployee.lastName,' ',s.updatedEmployee.firstName, ' ', s.updatedEmployee.lastName,' ',CAST(s.quantityInStock AS string),' ', c.name , ' ',b.name ) LIKE CONCAT('%',:keyword,'%') ")
+      "SELECT DISTINCT s FROM Stock s JOIN s.id.product p JOIN p.categorySet c JOIN p.brand b WHERE CONCAT(s.id.product.name,' ',s.id.product.description, ' ' , s.id.warehouse.warehouseName, ' ' ,s.createdEmployee.firstName,' ', s.createdEmployee.lastName,' ',s.updatedEmployee.firstName, ' ', s.updatedEmployee.lastName,' ',CAST(s.quantityInStock AS string),' ', c.name , ' ',b.name ) LIKE CONCAT('%',:keyword,'%') ")
   Page<Stock> searchAllBy(@Param("keyword") String keyword, Pageable pageable);
 }

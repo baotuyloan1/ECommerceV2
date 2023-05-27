@@ -20,8 +20,8 @@
         <table border="0" cellpadding="10">
             <tr>
                 <td>Product Name:</td>
-                <td><input type="text" th:field="*{productDto.name}"/></td>
-                <td class="error" th:if="${#fields.hasErrors('productDto.name')}" th:errors="*{productDto.name}"></td>
+                <td><input type="text" th:field="*{name}"/></td>
+                <td class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>
             </tr>
 
             <tr>
@@ -39,7 +39,7 @@
             <tr>
                 <td>Brand:</td>
                 <td>
-                    <select th:field="*{productDto.brandDto}">
+                    <select th:field="*{brandDto}">
                         <option th:each="i : ${brandDtoList}" th:value="${i.id}" th:text="${i.name}"></option>
                     </select>
                 </td>
@@ -48,26 +48,26 @@
             <tr>
                 <td>Category:</td>
                 <td>
-                    <select th:field="*{productDto.categoryDto}">
+                    <select th:field="*{categoryDto}">
                         <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}" >
                             <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}"  th:if="${categoryDto.level > 0}">*</p>
                             <span th:text="${categoryDto.name }"/>
                         </option>
                     </select>
                 </td>
-                <td class="error" th:if="${#fields.hasErrors('productDto.categoryDto')}" th:errors="*{productDto.categoryDto}"></td>
+                <td class="error" th:if="${#fields.hasErrors('categoryDto')}" th:errors="*{categoryDto}"></td>
 
             </tr>
             <tr>
                 <td>Description:</td>
                 <td>
-                    <input type="text" th:field="*{productDto.description}">
+                    <input type="text" th:field="*{description}">
                 </td>
             </tr>
             <tr>
                 <td>Price:</td>
-                <td><input type="number" th:field="*{productDto.price}"/></td>
-                <td th:if="${#fields.hasErrors('productDto.price')}" th:errors="*{productDto.price}" class="error"></td>
+                <td><input type="number" th:field="*{price}"/></td>
+                <td th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></td>
             </tr>
             <tr>
                 <td>Screen:</td>

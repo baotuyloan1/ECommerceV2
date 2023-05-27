@@ -31,4 +31,6 @@ public interface ProductService {
   Product findByName(String name);
 
     Product update(ProductDto productDto, MultipartFile multipartFile);
+
+  List<ProductDto> productDtoList();
 }

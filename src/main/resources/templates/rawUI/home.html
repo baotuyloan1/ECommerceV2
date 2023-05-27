@@ -422,16 +422,16 @@
         <div th:if="${not #lists.isEmpty(listLaptops)}">
             <tbody>
             <tr th:each="laptop : ${listLaptops}">
-                <td th:text="${laptop.product.id}">Product ID</td>
-                <td th:text="${laptop.product.name}">Name</td>
+                <td th:text="${laptop.id}">Product ID</td>
+                <td th:text="${laptop.name}">Name</td>
                 <td th:text="${laptop.cpu}">Cpu</td>
                 <td th:text="${laptop.ram}">Ram</td>
                 <td th:text="${laptop.hardDrive}">Hard Drive</td>
                 <td th:text="${laptop.graphicsCard}">Graphics Card</td>
                 <td th:text="${laptop.operatingSystem}">Operating System</td>
                 <td>
-                    <a th:href="@{'/edit/' + ${laptop.id}}">Edit</a>
-                    <a th:href="@{'/delete/' + ${laptop.id}}">Delete</a>
+                    <a th:href="@{'/rawUI/products/editProduct/' + ${laptop.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/products/deleteProduct/' + ${laptop.id}}">Delete</a>
                 </td>
             </tr>
             </tbody>

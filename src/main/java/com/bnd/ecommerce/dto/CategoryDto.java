@@ -2,6 +2,7 @@ package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
@@ -22,12 +23,11 @@ public class CategoryDto extends CreateUpdateTimeStamp {
 
   private Set<Category> children;
 
-  private int level;
+  @JsonIgnore private int level;
 
   public int getLevel() {
     return level;
   }
-
 
   public void setLevel(int level) {
     this.level = level;
@@ -84,5 +84,10 @@ public class CategoryDto extends CreateUpdateTimeStamp {
   @Override
   public int hashCode() {
     return Objects.hash(id);
+  }
+
+  @Override
+  public String toString() {
+    return "{" + "id=" + id + ", name='" + name + '\'' + '}';
   }
 }

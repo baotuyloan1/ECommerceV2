@@ -100,9 +100,4 @@ public class LaptopDto extends ProductDto {
   public void setSizeWeight(String sizeWeight) {
     this.sizeWeight = sizeWeight;
   }
-
-  public String getPhotoImagePath() {
-    if (getImage() == null || getId() == 0) return null;
-    return "/laptop-photos/" + getId() + "/" + getImage();
-  }
 }

@@ -1,5 +1,6 @@
 package com.bnd.ecommerce.service.impl;
 
+import com.bnd.ecommerce.comparator.CategoryComparator;
 import com.bnd.ecommerce.dto.*;
 import com.bnd.ecommerce.entity.*;
 import com.bnd.ecommerce.exception.CreateFailException;
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     String fileName =
         StringUtils.cleanPath(Objects.requireNonNull(mainImage.getOriginalFilename()));
     productDto.setImage(fileName);
-    Category category = mapStructMapper.categoryDtoToCategory(productDto.getCategoryDto());
+    Category category = mapStructMapper.categoryDtoToCategory(productDto.getMainCategoryDto());
     Set<Category> categories = new HashSet<>();
     findRootCategory(category, categories);
     String uploadDir = "";
@@ -85,21 +86,21 @@ public class ProductServiceImpl implements ProductService {
 
     if (productDto instanceof PhoneDto phoneDto) {
       Phone savedPhone = mapStructMapper.phoneDtoToPhone(phoneDto);
-      savedPhone.setCategories(categories);
+      savedPhone.setCategorySet(categories);
       savedProduct = phoneRepository.save(savedPhone);
       uploadDir = PHONE_DIR + savedPhone.getId();
     }
 
     if (productDto instanceof LaptopDto laptopDto) {
       Laptop savedLaptop = mapStructMapper.laptopDtoToLaptop(laptopDto);
-      savedLaptop.setCategories(categories);
+      savedLaptop.setCategorySet(categories);
       savedProduct = laptopRepository.save(savedLaptop);
       uploadDir = LAPTOP_DIR + savedLaptop.getId();
     }
 
     if (productDto instanceof TabletDto tabletDto) {
       Tablet savedTabled = mapStructMapper.tabletDtoToTablet(tabletDto);
-      savedTabled.setCategories(categories);
+      savedTabled.setCategorySet(categories);
       savedProduct = tabletRepository.save(savedTabled);
       uploadDir = PHONE_DIR + savedTabled.getId();
     }
@@ -147,14 +148,7 @@ public class ProductServiceImpl implements ProductService {
     if (keyword != null && !keyword.trim().equals(""))
       productPage = productRepository.search(keyword, pageable);
     else productPage = productRepository.findAll(pageable);
-    return productPage.map(
-        product -> {
-          ProductDto productDto = mapStructMapper.productToProductDto(product);
-          CategoryDto mainCategoryDto =
-              mapStructMapper.categoryToCategoryDto(getMainCategory(product.getCategories()));
-          productDto.setCategoryDto(mainCategoryDto);
-          return productDto;
-        });
+    return productPage.map(this::getProductDto);
   }
 
   //    @Override
@@ -173,17 +167,39 @@ public class ProductServiceImpl implements ProductService {
         productRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    return getProductDto(foundProduct);
+  }
+
+  private <T> Set<T> convertListToSet(List<T> list) {
+    Set<T> set = new HashSet<>();
+    for (T t : list) {
+      set.add(t);
+    }
+    return set;
+  }
+
+  private ProductDto getProductDto(Product foundProduct) {
+    ProductDto productDto = null;
+    sortCategoryById(foundProduct);
+
     if (foundProduct instanceof Phone phone) {
-      return mapStructMapper.phoneToPhoneDto(phone);
+      productDto = mapStructMapper.phoneToPhoneDto(phone);
     }
     if (foundProduct instanceof Laptop laptop) {
-      return mapStructMapper.laptopToLaptopDto(laptop);
+      productDto = mapStructMapper.laptopToLaptopDto(laptop);
     }
-    ProductDto productDto = mapStructMapper.productToProductDto(foundProduct);
-    productDto.setCategoryDto(
-        mapStructMapper.categoryToCategoryDto(getMainCategory(foundProduct.getCategories())));
+    if (foundProduct instanceof Tablet tablet) {
+      productDto = mapStructMapper.tabletToTabletDto(tablet);
+    }
     return productDto;
   }
+
+  private static void sortCategoryById(Product foundProduct) {
+    Set<Category> categorySet = new TreeSet<>(new CategoryComparator());
+    categorySet.addAll(foundProduct.getCategorySet());
+    foundProduct.setCategorySet(categorySet);
+  }
+
   //
   @Override
   public boolean deleteProductById(long id) {
@@ -194,12 +210,9 @@ public class ProductServiceImpl implements ProductService {
   }
   //
   private Category getMainCategory(Set<Category> categorySet) {
-    for (Category category : categorySet) {
-      if (category.getChildren().isEmpty()) {
-        return category;
-      }
-    }
-    return null;
+    TreeSet<Category> sortedSet = new TreeSet<>(new CategoryComparator());
+    sortedSet.addAll(categorySet);
+    return sortedSet.last();
   }
 
   public Category findRootCategory(Category category, Set<Category> categories) {
@@ -223,25 +236,25 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product update(ProductDto productDto, MultipartFile multipartFile) {
-    Category category = mapStructMapper.categoryDtoToCategory(productDto.getCategoryDto());
-    Set<Category> categories = new HashSet<>();
-    findRootCategory(category, categories);
+    //    Category category = mapStructMapper.categoryDtoToCategory(productDto.getCategoryDto());
+    //    Set<Category> categories = new HashSet<>();
+    //    findRootCategory(category, categories);
     if (productDto instanceof PhoneDto phoneDto) {
       updateImage(phoneDto, multipartFile, PHONE_DIR);
       Phone updatedPhone = mapStructMapper.phoneDtoToPhone(phoneDto);
-      updatedPhone.setCategories(categories);
+      //      updatedPhone.setCategorySet(categories);
       return phoneRepository.save(updatedPhone);
     }
     if (productDto instanceof LaptopDto laptopDto) {
       updateImage(laptopDto, multipartFile, LAPTOP_DIR);
       Laptop updatedLaptop = mapStructMapper.laptopDtoToLaptop(laptopDto);
-      updatedLaptop.setCategories(categories);
+      //      updatedLaptop.setCategorySet(categories);
       return laptopRepository.save(updatedLaptop);
     }
     if (productDto instanceof TabletDto tabletDto) {
       updateImage(tabletDto, multipartFile, TABLET_DIR);
       Tablet updatedTablet = mapStructMapper.tabletDtoToTablet(tabletDto);
-      updatedTablet.setCategories(categories);
+      //      updatedTablet.setCategorySet(categories);
       return tabletRepository.save(updatedTablet);
     }
     return null;
@@ -266,7 +279,16 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public Phone update(PhoneDto phoneDto, MultipartFile multipartFile) {
     Phone phone = mapStructMapper.phoneDtoToPhone(phoneDto);
-
     return phoneRepository.save(phone);
+  }
+
+  @Override
+  public List<ProductDto> productDtoList() {
+    List<ProductDto> productDtoList = new ArrayList<>();
+    List<Product> productList = productRepository.findAll();
+    for (Product product : productList) {
+      productDtoList.add(getProductDto(product));
+    }
+    return productDtoList;
   }
 }

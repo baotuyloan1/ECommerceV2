@@ -38,7 +38,7 @@
 
             <tr>
                 <td>Image details:</td>
-                <td><img  th:each="item : ${phoneDto.imageDetailDtoSet}" th:src="@{${item.photoImagePath}}"/> </td>
+                <td><img  th:each="item : ${phoneDto.imageDetailDtoSet}" th:src="@{${'/images/phone-photos/'+phoneDto.id+'/'+item.name}}"/> </td>
             </tr>
             <tr>
                 <td>Brand:</td>

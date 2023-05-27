@@ -27,7 +27,7 @@ public class Category extends CreateUpdateTimeStamp {
   @JoinColumn(name = "parent_id")
   private Category parentCategory;
 
-  @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<Category> children;
 
   public Category getParentCategory() {
@@ -55,7 +55,7 @@ public class Category extends CreateUpdateTimeStamp {
   }
 
   //  @JsonIgnore
-  @ManyToMany(mappedBy = "categories")
+  @ManyToMany(mappedBy = "categorySet")
   @JsonBackReference
   private Set<Product> products;
 

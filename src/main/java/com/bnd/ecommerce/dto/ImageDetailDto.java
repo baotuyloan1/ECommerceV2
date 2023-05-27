@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateTimestamp;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 public class ImageDetailDto extends CreateTimestamp {
 
@@ -14,6 +15,7 @@ public class ImageDetailDto extends CreateTimestamp {
 
   private String description;
 
+  @JsonBackReference
   private ProductDto productDto;
 
   public long getId() {
@@ -64,15 +66,7 @@ public class ImageDetailDto extends CreateTimestamp {
     this.productDto = productDto;
   }
 
-  public String getPhotoImagePath() {
-    if (productDto.getId() == 0 || name == null) return null;
-    if (productDto instanceof PhoneDto) {
-      return "images/phone-photos/" + productDto.getId() + "/" + name;
-    }
-    if (productDto instanceof LaptopDto)
-      return "images/laptop-photos/" + productDto.getId() + "/" + name;
-    if (productDto instanceof TabletDto)
-      return "images/tablet-photos/" + productDto.getId() + "/" + name;
-    return null;
-  }
+
+
+
 }

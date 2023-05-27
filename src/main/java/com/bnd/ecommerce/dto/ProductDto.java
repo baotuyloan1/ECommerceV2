@@ -2,13 +2,16 @@ package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.validator.product.UniqueProductName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductDto extends CreateUpdateTimeStamp {
@@ -29,16 +32,29 @@ public class ProductDto extends CreateUpdateTimeStamp {
   private String image;
 
   private BrandDto brandDto;
-  private CategoryDto categoryDto;
 
-  public Set<StockDto> stockDtoSetSet = new HashSet<>();
+  @JsonProperty("categories")
+  @JsonIgnoreProperties({"children", "parentCategory"})
+  private Set<CategoryDto> categoryDtoSet;
 
-  public Set<StockDto> getStockDtoSetSet() {
-    return stockDtoSetSet;
+  public Set<StockDto> stockDtoSet ;
+
+  @JsonIgnore public CategoryDto mainCategoryDto;
+
+  public CategoryDto getMainCategoryDto() {
+    return mainCategoryDto;
   }
 
-  public void setStockDtoSetSet(Set<StockDto> stockDtoSetSet) {
-    this.stockDtoSetSet = stockDtoSetSet;
+  public void setMainCategoryDto(CategoryDto mainCategoryDto) {
+    this.mainCategoryDto = mainCategoryDto;
+  }
+
+  public Set<StockDto> getStockDtoSet() {
+    return stockDtoSet;
+  }
+
+  public void setStockDtoSet(Set<StockDto> stockDtoSet) {
+    this.stockDtoSet = stockDtoSet;
   }
 
   public String getImage() {
@@ -49,18 +65,10 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.image = image;
   }
 
-  @NotNull(message = "Please choose category")
-  public CategoryDto getCategoryDto() {
-    return categoryDto;
-  }
+  private Set<ProductLogDto> productLogDtoSet = new HashSet<>();
 
-  public void setCategoryDto(CategoryDto categoryDto) {
-    this.categoryDto = categoryDto;
-  }
-
-  private Set<ProductLogDto> productLogDtoSet;
-
-  private Set<ImageDetailDto> imageDetailDtoSet;
+  @JsonManagedReference
+  private Set<ImageDetailDto> imageDetailDtoSet= new HashSet<>();
 
   public long getId() {
     return id;
@@ -130,5 +138,13 @@ public class ProductDto extends CreateUpdateTimeStamp {
       return "/images/tablet-photos/" + getId() + "/" + getImage();
     }
     return null;
+  }
+
+  public Set<CategoryDto> getCategoryDtoSet() {
+    return categoryDtoSet;
+  }
+
+  public void setCategoryDtoSet(Set<CategoryDto> categoryDtoSet) {
+    this.categoryDtoSet = categoryDtoSet;
   }
 }

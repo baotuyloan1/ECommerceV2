@@ -1,5 +1,6 @@
 package com.bnd.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class ImageDetail extends CreateTimestamp{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
     public long getId() {

@@ -49,7 +49,8 @@ public class Product extends CreateUpdateTimeStamp {
       name = "product_category",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
-  private Set<Category> categories;
+  @JsonManagedReference
+  private Set<Category> categorySet;
 
   private String image;
 
@@ -75,6 +76,7 @@ public class Product extends CreateUpdateTimeStamp {
   }
 
   @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JsonManagedReference
   private Set<ImageDetail> imageDetailSet;
 
   public long getId() {
@@ -111,12 +113,12 @@ public class Product extends CreateUpdateTimeStamp {
 
 
 
-  public Set<Category> getCategories() {
-    return categories;
+  public Set<Category> getCategorySet() {
+    return categorySet;
   }
 
-  public void setCategories(Set<Category> categories) {
-    this.categories = categories;
+  public void setCategorySet(Set<Category> categories) {
+    this.categorySet = categories;
   }
 
   public Set<ImageDetail> getImageDetailSet() {
@@ -128,7 +130,7 @@ public class Product extends CreateUpdateTimeStamp {
   }
 
   public void addCategory(Category category) {
-    if (categories == null) categories = new HashSet<>();
-    this.categories.add(category);
+    if (categorySet == null) categorySet = new HashSet<>();
+    this.categorySet.add(category);
   }
 }

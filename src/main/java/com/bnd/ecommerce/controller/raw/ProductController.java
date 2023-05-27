@@ -144,53 +144,48 @@ public class ProductController {
     else throw new DeleteFailException("Delete Product fail");
   }
   //
-  //  @GetMapping("/newLaptop")
-  //  public String showNewLaptop(Model model) {
-  //    BrandDto brandDto = new BrandDto();
-  //    ProductDto productDto = new ProductDto();
-  //    LaptopDto laptopDto = new LaptopDto();
-  //    productDto.setBrandDto(brandDto);
-  //    laptopDto.setProductDto(productDto);
-  //    loadData(model);
-  //    model.addAttribute("laptopDto", laptopDto);
-  //    return VIEW_NEW_LAPTOP;
-  //  }
-  //
-  //  @PostMapping("/createLaptop")
-  //  public String saveLaptop(
-  //      @Valid @ModelAttribute("laptopDto") LaptopDto laptopDto,
-  //      BindingResult bindingResult,
-  //      @RequestParam("imageProduct") MultipartFile mainImage,
-  //      @RequestParam("imagesDetail") MultipartFile[] imagesDetail,
-  //      Model model) {
-  //    if (bindingResult.hasErrors() || mainImage.isEmpty()) {
-  //      loadData(model);
-  //      if (mainImage.isEmpty()) {
-  //        model.addAttribute("imageEmptyError", "Image can't empty");
-  //        model.addAttribute("imageIsEmpty", true);
-  //      }
-  //      return VIEW_NEW_LAPTOP;
-  //    }
-  //    Laptop savedLaptop;
-  //    if (!mainImage.isEmpty()) {
-  //      savedLaptop = laptopService.create(laptopDto, mainImage, imagesDetail);
-  //      if (savedLaptop != null) return REDIRECT_PRODUCTS;
-  //      else throw new CreateFailException("Create laptop fail");
-  //    }
-  //    return REDIRECT_PRODUCTS;
-  //  }
-  //
-  //  @PostMapping("/updateLaptop")
-  //  public String updateLaptop(
-  //      @ModelAttribute("laptopDto") LaptopDto laptopDto,
-  //      Model model,
-  //      @RequestParam("imageProduct") MultipartFile multipartFile) {
-  //    Laptop savedLaptop = laptopService.update(laptopDto, multipartFile);
-  //    if (savedLaptop != null) {
-  //      return REDIRECT_PRODUCTS;
-  //    } else {
-  //      loadData(model);
-  //      return "rawUI/product/edit_laptop/" + laptopDto.getId();
-  //    }
-  //  }
+  @GetMapping("/newLaptop")
+  public String showNewLaptop(Model model) {
+    LaptopDto laptopDto = new LaptopDto();
+    loadData(model);
+    model.addAttribute("laptopDto", laptopDto);
+    return VIEW_NEW_LAPTOP;
+  }
+
+  @PostMapping("/createLaptop")
+  public String saveLaptop(
+      @Valid @ModelAttribute("laptopDto") LaptopDto laptopDto,
+      BindingResult bindingResult,
+      @RequestParam("imageProduct") MultipartFile mainImage,
+      @RequestParam("imagesDetail") MultipartFile[] imagesDetail,
+      Model model) {
+    if (bindingResult.hasErrors() || mainImage.isEmpty()) {
+      loadData(model);
+      if (mainImage.isEmpty()) {
+        model.addAttribute("imageEmptyError", "Image can't empty");
+        model.addAttribute("imageIsEmpty", true);
+      }
+      return VIEW_NEW_LAPTOP;
+    }
+    if (!mainImage.isEmpty()) {
+      Product savedLaptop = productService.create(laptopDto, mainImage, imagesDetail);
+      if (savedLaptop != null) return REDIRECT_PRODUCTS;
+      else throw new CreateFailException("Create laptop fail");
+    }
+    return VIEW_NEW_LAPTOP;
+  }
+
+  @PostMapping("/updateLaptop")
+  public String updateLaptop(
+      @ModelAttribute("laptopDto") LaptopDto laptopDto,
+      Model model,
+      @RequestParam("imageProduct") MultipartFile multipartFile) {
+    Product updatedLaptop = productService.update(laptopDto, multipartFile);
+    if (updatedLaptop != null) {
+      return REDIRECT_PRODUCTS;
+    } else {
+      loadData(model);
+      return "rawUI/product/edit_laptop/" + laptopDto.getId();
+    }
+  }
 }

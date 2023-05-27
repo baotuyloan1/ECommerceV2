@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   @Query(
       value =
-          "SELECT DISTINCT p FROM Product p INNER JOIN p.categories c WHERE CONCAT(p.name,' ',CAST(p.id AS string ),' ',p.brand.name,' ',p.brand.description,' ',c.name,' ' ,c.description  )LIKE CONCAT('%',:keyword,'%') ")
+          "SELECT DISTINCT p FROM Product p INNER JOIN p.categorySet c WHERE CONCAT(p.name,' ',CAST(p.id AS string ),' ',p.brand.name,' ',p.brand.description,' ',c.name,' ' ,c.description  )LIKE CONCAT('%',:keyword,'%') ")
   Page<Product> search(@Param("keyword") String keyword, Pageable pageable);
 
   @Modifying

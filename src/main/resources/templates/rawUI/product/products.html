@@ -10,6 +10,11 @@
     table, th, td {
         border: 1px solid;
     }
+
+    img{
+        height: 30px;
+        width: auto;
+    }
 </style>
 <body>
 <div align="center">
@@ -50,13 +55,6 @@
 
     <div>
         <h1>List Products</h1>
-        <div>
-            <a href="/rawUI/products/phones">View Phones</a>
-        </div>
-
-        <div>
-            <a href="/rawUI/products/laptops">View Laptop</a>
-        </div>
 
         <div>
             <div>
@@ -129,12 +127,15 @@
                 <div th:if="${not #lists.isEmpty(productDtoList)}">
                     <tbody>
                     <tr th:each="productDto : ${productDtoList}">
-                        <td th:text="${productDto.id}"/>
+                       <td>
+                        <span th:text="${productDto.id}"/>
+                           <img  th:src="${productDto.photoImagePath}">
+                       </td>
                         <td th:text="${productDto.name}"/>
                         <td th:text="${productDto.description}"/>
                         <td th:text="${productDto.price}"/>
                         <td th:text="${productDto.brandDto.name}"/>
-                        <td th:text="${productDto.categoryDto.name}"/>
+                        <td th:text="${productDto.categoryDtoSet}"/>
                         <td th:text="${productDto.createTime}">createTime</td>
                         <td th:text="${productDto.updateTime}">updateTime</td>
                         <td>

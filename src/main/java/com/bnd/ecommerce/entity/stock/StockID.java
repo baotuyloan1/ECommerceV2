@@ -16,6 +16,7 @@ public class StockID implements Serializable {
   @NotBlank
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "product_id")
+  @JsonIgnore
   private Product product;
 
   @NotBlank
