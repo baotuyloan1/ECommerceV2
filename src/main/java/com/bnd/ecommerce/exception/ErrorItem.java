@@ -11,4 +11,12 @@ public class ErrorItem {
   public void setMessage(String message) {
     this.message = message;
   }
+
+  public String getCode() {
+    return code;
+  }
+
+  public String getMessage() {
+    return message;
+  }
 }

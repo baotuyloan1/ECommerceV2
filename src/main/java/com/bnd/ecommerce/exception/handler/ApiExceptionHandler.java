@@ -2,10 +2,10 @@ package com.bnd.ecommerce.exception.handler;
 
 import com.bnd.ecommerce.exception.ErrorItem;
 import com.bnd.ecommerce.exception.ErrorResponse;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
+import java.util.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-
-import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
-
 
   @SuppressWarnings("rawtypes")
   @ExceptionHandler(ConstraintViolationException.class)
@@ -28,9 +27,8 @@ public class ApiExceptionHandler {
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
-
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorItem> handle(ResourceNotFoundException e){
+  public ResponseEntity<ErrorItem> handle(ResourceNotFoundException e) {
     ErrorItem errorItem = new ErrorItem();
     errorItem.setMessage(e.getMessage());
     return new ResponseEntity<>(errorItem, HttpStatus.NOT_FOUND);

@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,4 +73,23 @@ public class GlobalExceptionHandler {
         );
     return errorDTO;
   }
+//
+//  @ExceptionHandler(MethodArgumentNotValidException.class)
+//  @ResponseStatus(HttpStatus.CONFLICT)
+//  @ResponseBody
+//  public ErrorDTO handleArgumentNotValidException(HttpServletRequest request, Exception exception) {
+//    ErrorDTO errorDTO = new ErrorDTO();
+//
+//    errorDTO.setTimestamp(new Date());
+//    errorDTO.setStatus(HttpStatus.CONFLICT.value());
+//    errorDTO.addError(exception.getMessage());
+//    errorDTO.setPath(
+//            request.getScheme()+"://" // Lấy scheme (HTTP hoặc HTTPS)
+//                    + request.getServerName() // Lấy domain name
+//                    + request.getServerPort() // lấy port(int) nếu có
+//                    + request.getContextPath() // lấy tên của web application
+//                    + request.getServletPath() // Lấy servlet path (nếu có)
+//    );
+//    return errorDTO;
+//  }
 }
