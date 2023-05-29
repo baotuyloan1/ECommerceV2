@@ -45,26 +45,24 @@ public class WebSecurityConfig {
     http.csrf().disable();
     http.authorizeRequests()
         .antMatchers("/rawUI/admin/**")
-        //         .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
-        //        .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
-        .permitAll()
-        // authority
+        .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
         .antMatchers("/rawUI/manager/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/rawUI/")
         .permitAll()
         .antMatchers("/rawUI/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
-        .antMatchers("/api/**")
+        .antMatchers("/api/**/")
         .permitAll()
-        .anyRequest()
-        .authenticated()
+//        .antMatchers("/api/orders")
+//        .hasRole("CUSTOMER")
+//        .anyRequest()
+//        .authenticated()
         .and()
         .formLogin()
         .loginPage("/rawUI/login")
         .usernameParameter("email")
         .passwordParameter("password")
-        //        .defaultSuccessUrl("/rawUI/")
         .successHandler(new CustomAuthenticationSuccessHandler())
         .failureUrl("/rawUI/login?message=error")
         .permitAll()
@@ -76,8 +74,6 @@ public class WebSecurityConfig {
         .and()
         .exceptionHandling()
         .accessDeniedHandler(new MyAccessDeniedHandler() {});
-    //        .and()
-    //        .httpBasic();
     return http.build();
   }
 }

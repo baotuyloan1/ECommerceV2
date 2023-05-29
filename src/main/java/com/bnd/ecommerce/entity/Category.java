@@ -56,7 +56,7 @@ public class Category extends CreateUpdateTimeStamp {
 
   //  @JsonIgnore
   @ManyToMany(mappedBy = "categorySet")
-  @JsonBackReference
+//  @JsonBackReference
   private Set<Product> products;
 
   public int getId() {

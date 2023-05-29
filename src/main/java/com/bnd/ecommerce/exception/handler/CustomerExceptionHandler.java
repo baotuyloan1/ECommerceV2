@@ -14,26 +14,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 // ưu tiên sử lý các handleMethod ở class extends ResponseEntityExceptionHandler truo, không có thì
 // nó nhảy vào class kia
-@RestControllerAdvice
-public class CustomerExceptionHandler extends ResponseEntityExceptionHandler {
-
-  @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex,
-      HttpHeaders headers,
-      HttpStatus status,
-      WebRequest request) {
-    ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.setTimestamp(new Date());
-    errorResponse.setMessageTemplate(ex.getMessage());
-    errorResponse.setHttpStatus(HttpStatus.CONFLICT);
-    for (FieldError x : ex.getBindingResult().getFieldErrors()) {
-
-      ErrorItem errorItem = new ErrorItem();
-      errorItem.setMessage(x.getDefaultMessage());
-      errorItem.setCode(x.getCode());
-      errorResponse.addError(errorItem);
-    }
-    return new ResponseEntity<>(errorResponse, headers, status);
-  }
-}
+//@RestControllerAdvice
+//public class CustomerExceptionHandler extends ResponseEntityExceptionHandler {
+//
+//  @Override
+//  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+//      MethodArgumentNotValidException ex,
+//      HttpHeaders headers,
+//      HttpStatus status,
+//      WebRequest request) {
+//    ErrorResponse errorResponse = new ErrorResponse();
+//    errorResponse.setTimestamp(new Date());
+//    errorResponse.setMessageTemplate(ex.getMessage());
+//    errorResponse.setHttpStatus(HttpStatus.CONFLICT);
+//    for (FieldError x : ex.getBindingResult().getFieldErrors()) {
+//
+//      ErrorItem errorItem = new ErrorItem();
+//      errorItem.setMessage(x.getDefaultMessage());
+//      errorItem.setCode(x.getCode());
+//      errorResponse.addError(errorItem);
+//    }
+//    return new ResponseEntity<>(errorResponse, headers, status);
+//  }
+//}

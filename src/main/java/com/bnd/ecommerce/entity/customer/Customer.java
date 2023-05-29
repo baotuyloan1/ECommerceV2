@@ -2,14 +2,19 @@ package com.bnd.ecommerce.entity.customer;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.order.Order;
+import com.bnd.ecommerce.enums.GenderEnum;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Table(name = "customer")
-public class Customer extends CreateUpdateTimeStamp {
+public class Customer extends CreateUpdateTimeStamp implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +24,44 @@ public class Customer extends CreateUpdateTimeStamp {
   @Column(nullable = false)
   private String firstName;
 
-  private String lastName;
+  @NotNull private String lastName;
+
+  @Column(unique = true)
   private String email;
+
   private String phone;
 
-  private String address;
+  private String password;
+
+  @OneToMany(mappedBy = "customer")
+  private Set<CustomerAddress> customerAddressSet;
+
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+
+  public Set<CustomerAddress> getCustomerAddressSet() {
+    if (customerAddressSet == null) customerAddressSet = new HashSet<>();
+    return customerAddressSet;
+  }
+
+  public void setCustomerAddressSet(Set<CustomerAddress> customerAddressSet) {
+    this.customerAddressSet = customerAddressSet;
+  }
+
+  @Column(name = "gender")
+  @Enumerated(EnumType.STRING)
+  private GenderEnum genderEnum;
+
+  public GenderEnum getGenderEnum() {
+    return genderEnum;
+  }
+
+  public void setGenderEnum(GenderEnum gender) {
+    this.genderEnum = gender;
+  }
 
   public Set<Order> getOrders() {
     return orders;
@@ -76,11 +114,38 @@ public class Customer extends CreateUpdateTimeStamp {
     this.phone = phone;
   }
 
-  public String getAddress() {
-    return address;
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return null;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public String getUsername() {
+    return this.email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

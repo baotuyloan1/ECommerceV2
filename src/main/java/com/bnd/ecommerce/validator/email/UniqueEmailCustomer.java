@@ -7,9 +7,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-
-public @interface UniqueEmail {
-  String message() default "Default: Email already exists in the system";
+@Target({ElementType.FIELD, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = UniqueCustomerEmailValidator.class)
+public @interface UniqueEmailCustomer {
+  String message() default "Default: Email is exist in system";
 
   Class<?>[] groups() default {};
 

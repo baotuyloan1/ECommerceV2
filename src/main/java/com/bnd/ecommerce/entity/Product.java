@@ -49,7 +49,7 @@ public class Product extends CreateUpdateTimeStamp {
       name = "product_category",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
-  @JsonManagedReference
+//  @JsonManagedReference
   private Set<Category> categorySet;
 
   private String image;

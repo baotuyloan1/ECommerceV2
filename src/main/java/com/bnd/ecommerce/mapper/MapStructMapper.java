@@ -2,6 +2,7 @@ package com.bnd.ecommerce.mapper;
 
 import com.bnd.ecommerce.dto.*;
 import com.bnd.ecommerce.entity.*;
+import com.bnd.ecommerce.entity.customer.Customer;
 import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.stock.Stock;
 import com.bnd.ecommerce.entity.stock.Warehouse;
@@ -23,7 +24,6 @@ public interface MapStructMapper {
   Brand brandDtoToBrand(BrandDto brandDto);
 
   BrandDto brandToBrandDto(Brand brand);
-
 
   @InheritInverseConfiguration(name = "productDtoToProduct")
   ProductDto productToProductDto(Product product);
@@ -57,16 +57,10 @@ public interface MapStructMapper {
 
   WarehouseDto wareHouseToWareHouseDto(Warehouse warehouse);
 
-  //  @Mapping(source = "categorySet", target = "categoryDtoSet")
-  //  @Mapping(source = "brand", target = "brandDto")
-  //  @Mapping(source = "imageDetailSet", target = "imageDetailDtoSet")
-  //  @Mapping(source = "stockSet",target = "stockDtoSet")
+  @InheritConfiguration(name = "productToProductDto")
   LaptopDto laptopToLaptopDto(Laptop laptop);
 
-  //  @Mapping(source = "categoryDtoSet", target = "categorySet")
-  //  @Mapping(source = "imageDetailDtoSet", target = "imageDetailSet")
-  //  @Mapping(source = "brandDto", target = "brand")
-  //  @Mapping(source = "stockDtoSet",target = "stockSet")
+  @InheritInverseConfiguration(name = "laptopToLaptopDto")
   Laptop laptopDtoToLaptop(LaptopDto laptopDto);
 
   Tablet tabletDtoToTablet(TabletDto tabletDto);
@@ -76,4 +70,11 @@ public interface MapStructMapper {
   Set<Category> categoryDtoSetToCategorySet(Set<CategoryDto> categoryDtoSet);
 
   Set<CategoryDto> categorySetToCategoryDtoSet(Set<Category> categorySet);
+
+  @Mapping(source = "customerAddressDtoSet", target = "customerAddressSet")
+  @Mapping(source = "genderEnum", target = "genderEnum")
+  Customer customerDtoToCustomer(CustomerDto customerDto);
+
+  @InheritInverseConfiguration(name = "customerDtoToCustomer")
+  CustomerDto customerToCustomerDto(Customer customer);
 }
