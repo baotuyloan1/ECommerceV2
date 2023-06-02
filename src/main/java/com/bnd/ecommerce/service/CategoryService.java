@@ -9,16 +9,18 @@ import org.springframework.data.domain.Page;
 public interface CategoryService {
 
   Category saveCategory(Category category);
+  CategoryDto saveCategory(CategoryDto categoryDto);
 
   Category findById(int id);
 
   List<Category> listCategories();
 
+  Set<CategoryDto> categoryDtoSet();
+
   boolean deleteById(int id);
 
   Page<Category> listAll(int pageNum, String sortField, String sortDir, int size);
 
-  Set<CategoryDto> categoryDtoSet();
 
   CategoryDto findCategoryDtoById(int id);
 

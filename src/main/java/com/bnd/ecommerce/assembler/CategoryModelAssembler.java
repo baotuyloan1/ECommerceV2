@@ -1,6 +1,6 @@
 package com.bnd.ecommerce.assembler;
 
-import com.bnd.ecommerce.entity.Category;
+import com.bnd.ecommerce.dto.CategoryDto;
 import com.bnd.ecommerce.restcontroller.CategoryRestController;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -12,10 +12,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @Component
-public class CategoryModelAssembler implements RepresentationModelAssembler<Category, EntityModel<Category>> {
+public class CategoryModelAssembler implements RepresentationModelAssembler<CategoryDto, EntityModel<CategoryDto>> {
     @Override
-    public EntityModel<Category> toModel(Category entity) {
-        EntityModel<Category> entityModel = EntityModel.of(entity);
+    public EntityModel<CategoryDto> toModel(CategoryDto entity) {
+        EntityModel<CategoryDto> entityModel = EntityModel.of(entity);
         entityModel.add(linkTo(methodOn(CategoryRestController.class).getOne(entity.getId())).withSelfRel().withType("GET"));
         entityModel.add(linkTo(methodOn(CategoryRestController.class).listAll()).withRel(IanaLinkRelations.COLLECTION).withType("GET"));
         return entityModel;

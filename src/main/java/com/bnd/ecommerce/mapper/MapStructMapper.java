@@ -67,8 +67,11 @@ public interface MapStructMapper {
 
   TabletDto tabletToTabletDto(Tablet tablet);
 
+
+  @Mapping(source = "parentCategory", target = "parentCategoryDto")
   Set<Category> categoryDtoSetToCategorySet(Set<CategoryDto> categoryDtoSet);
 
+  @InheritInverseConfiguration(name = "categoryDtoSetToCategorySet")
   Set<CategoryDto> categorySetToCategoryDtoSet(Set<Category> categorySet);
 
   @Mapping(source = "customerAddressDtoSet", target = "customerAddressSet")
