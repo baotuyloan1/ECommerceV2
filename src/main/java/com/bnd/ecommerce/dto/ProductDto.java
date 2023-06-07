@@ -37,9 +37,19 @@ public class ProductDto extends CreateUpdateTimeStamp {
   @JsonIgnoreProperties({"children", "parentCategory"})
   private Set<CategoryDto> categoryDtoSet;
 
-  public Set<StockDto> stockDtoSet ;
+  public Set<StockDto> stockDtoSet;
 
   @JsonIgnore public CategoryDto mainCategoryDto;
+
+  public String type;
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
 
   public CategoryDto getMainCategoryDto() {
     return mainCategoryDto;
@@ -67,8 +77,7 @@ public class ProductDto extends CreateUpdateTimeStamp {
 
   private Set<ProductLogDto> productLogDtoSet = new HashSet<>();
 
-  @JsonManagedReference
-  private Set<ImageDetailDto> imageDetailDtoSet= new HashSet<>();
+ private Set<ImageDetailDto> imageDetailDtoSet = new HashSet<>();
 
   public long getId() {
     return id;
@@ -126,6 +135,7 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.imageDetailDtoSet = imageDetailDtoSet;
   }
 
+  @JsonProperty(value = "imgUrl")
   public String getPhotoImagePath() {
     if (image == null || id == 0) return null;
     if (this instanceof PhoneDto) {

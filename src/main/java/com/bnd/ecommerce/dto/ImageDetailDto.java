@@ -1,7 +1,8 @@
 package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateTimestamp;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class ImageDetailDto extends CreateTimestamp {
 
@@ -15,8 +16,10 @@ public class ImageDetailDto extends CreateTimestamp {
 
   private String description;
 
-  @JsonBackReference
+  @JsonIgnore
   private ProductDto productDto;
+
+  private long productId;
 
   public long getId() {
     return id;
@@ -66,7 +69,11 @@ public class ImageDetailDto extends CreateTimestamp {
     this.productDto = productDto;
   }
 
+  public long getProductId() {
+    return productId;
+  }
 
-
-
+  public void setProductId(long productId) {
+    this.productId = productId;
+  }
 }

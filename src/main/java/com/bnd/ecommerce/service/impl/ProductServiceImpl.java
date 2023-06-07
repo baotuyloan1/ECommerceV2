@@ -184,12 +184,27 @@ public class ProductServiceImpl implements ProductService {
 
     if (foundProduct instanceof Phone phone) {
       productDto = mapStructMapper.phoneToPhoneDto(phone);
+      productDto.setType("phone");
     }
     if (foundProduct instanceof Laptop laptop) {
       productDto = mapStructMapper.laptopToLaptopDto(laptop);
+      productDto.setType("laptop");
     }
     if (foundProduct instanceof Tablet tablet) {
       productDto = mapStructMapper.tabletToTabletDto(tablet);
+      productDto.setType("tablet");
+    }
+    for (ImageDetailDto imageDetailDto : productDto.getImageDetailDtoSet()) {
+      imageDetailDto.setProductId(productDto.getId());
+      if (productDto.getType().equals("phone"))
+        imageDetailDto.setUrl(
+            "/images/phone-photos/" + productDto.getId() + "/" + imageDetailDto.getName());
+      else if (productDto.getType().equals("laptop"))
+        imageDetailDto.setUrl(
+            "/images/laptop-photos/" + productDto.getId() + "/" + imageDetailDto.getName());
+      else if (productDto.getType().equals("tablet"))
+        imageDetailDto.setUrl(
+            "/images/tablet-photos/" + productDto.getId() + "/" + imageDetailDto.getName());
     }
     return productDto;
   }

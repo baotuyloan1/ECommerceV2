@@ -59,7 +59,7 @@
             <tr>
                 <td>Category:</td>
                 <td>
-                    <select th:field="*{categoryDto}">
+                    <select th:field="*{mainCategoryDto}">
                         <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}">
                             <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}" th:if="${categoryDto.level > 0}">
                                 *</p>

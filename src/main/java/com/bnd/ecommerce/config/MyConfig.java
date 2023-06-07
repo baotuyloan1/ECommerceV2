@@ -17,6 +17,7 @@ public class MyConfig implements WebMvcConfigurer {
         exposeDirectory("images/phone-photos", registry);
         exposeDirectory("images/laptop-photos", registry);
         exposeDirectory("images/tablet-photos", registry);
+        exposeDirectory("images/slider-photos", registry);
     }
 
     private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {

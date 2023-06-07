@@ -38,7 +38,7 @@ public class CategoryRestController {
         return categoryService.findById(id);
     }
 
-    @GetMapping("/")
+    @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<EntityModel<CategoryDto>> listAll() {

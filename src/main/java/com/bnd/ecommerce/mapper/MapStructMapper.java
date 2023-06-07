@@ -43,10 +43,10 @@ public interface MapStructMapper {
   @InheritConfiguration(name = "productDtoToProduct")
   Phone phoneDtoToPhone(PhoneDto phoneDto);
 
-  @Mapping(source = "productDto", target = "product", ignore = true)
+// @Mapping(source = "productDto", target = "product")
   ImageDetail imageDetailDtoToImageDetail(ImageDetailDto imageDetailDto);
 
-  @InheritInverseConfiguration(name = "imageDetailDtoToImageDetail")
+//  @Mapping(source = "product", target = "productDto")
   ImageDetailDto imageDetailToImageDetailDto(ImageDetail imageDetail);
 
   Stock stockDtoToStock(StockDto stockDto);
