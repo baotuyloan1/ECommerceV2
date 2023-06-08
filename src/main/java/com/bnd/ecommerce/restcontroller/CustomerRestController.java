@@ -2,11 +2,16 @@ package com.bnd.ecommerce.restcontroller;
 
 import com.bnd.ecommerce.assembler.CustomerModelAssembler;
 import com.bnd.ecommerce.dto.CustomerDto;
+import com.bnd.ecommerce.entity.employee.Employee;
+import com.bnd.ecommerce.jwt.JwtTokenProvider;
 import com.bnd.ecommerce.service.CustomerService;
+import com.bnd.ecommerce.service.EmployeeService;
 import javax.validation.Valid;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,25 +23,37 @@ public class CustomerRestController {
 
   private final CustomerService customerService;
 
+
+  private final EmployeeService employeeService;
+
+  private final JwtTokenProvider jwtTokenProvider;
+
   public CustomerRestController(
-      CustomerModelAssembler customerModelAssembler, CustomerService customerService) {
+      CustomerModelAssembler customerModelAssembler,
+      CustomerService customerService,
+      EmployeeService employeeService,
+      JwtTokenProvider jwtTokenProvider) {
     this.customerModelAssembler = customerModelAssembler;
     this.customerService = customerService;
+    this.employeeService = employeeService;
+    this.jwtTokenProvider = jwtTokenProvider;
   }
 
-
-  @SuppressWarnings("rawtypes")
-  @PostMapping
-  public ResponseEntity newCustomer(
+  @PostMapping("/signup")
+  public ResponseEntity<?> loginCustomer(
       @Valid @RequestBody CustomerDto customerDto, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
-    EntityModel<CustomerDto> customerEntityModel =
-        customerModelAssembler.toModel(customerService.save(customerDto));
-    return ResponseEntity.created(
-            customerEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-        .body(customerEntityModel);
+
+//    Authentication authentication =
+//        authenticationManager.authenticate(
+//            new UsernamePasswordAuthenticationToken(
+//                customerDto.getEmail(), customerDto.getPassword()));
+    Employee employee = employeeService.findByEmail(customerDto.getEmail());
+    String jwt = jwtTokenProvider.generateToken(employee);
+
+    return ResponseEntity.ok(jwt);
   }
 
   @GetMapping("/{id}")

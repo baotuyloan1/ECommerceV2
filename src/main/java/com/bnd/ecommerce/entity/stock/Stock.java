@@ -1,7 +1,6 @@
 package com.bnd.ecommerce.entity.stock;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
-import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.entity.employee.Employee;
 import javax.persistence.*;
 

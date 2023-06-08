@@ -1,24 +1,36 @@
 package com.bnd.ecommerce.security;
 
+import com.bnd.ecommerce.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
   private final EmployeeDetailsServiceImpl employeeDetailsService;
 
-  public WebSecurityConfig(EmployeeDetailsServiceImpl employeeDetailsService) {
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  public WebSecurityConfig(
+      EmployeeDetailsServiceImpl employeeDetailsService,
+      JwtAuthenticationFilter jwtAuthenticationFilter) {
     this.employeeDetailsService = employeeDetailsService;
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
   }
 
   @Bean
@@ -42,22 +54,23 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable();
-    http.authorizeRequests()
+    http.csrf()
+        .disable()
+        .authorizeRequests()
         .antMatchers("/rawUI/admin/**")
         .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
         .antMatchers("/rawUI/manager/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
-        .antMatchers("/rawUI/")
-        .permitAll()
         .antMatchers("/rawUI/**")
-        .hasAnyAuthority("ADMIN", "MANAGER")
-        .antMatchers("/api/**/")
         .permitAll()
-//        .antMatchers("/api/orders")
-//        .hasRole("CUSTOMER")
-//        .anyRequest()
-//        .authenticated()
+        .antMatchers("/api/products")
+        .permitAll()
+        .antMatchers("/api/customers/signup")
+        .permitAll()
+        .antMatchers("/api/products/**")
+        .hasAnyAuthority("ADMIN", "MANAGER")
+        .anyRequest()
+        .authenticated()
         .and()
         .formLogin()
         .loginPage("/rawUI/login")
@@ -74,6 +87,12 @@ public class WebSecurityConfig {
         .and()
         .exceptionHandling()
         .accessDeniedHandler(new MyAccessDeniedHandler() {});
+//
+//    http.exceptionHandling()
+//        .defaultAuthenticationEntryPointFor(
+//            new HttpStatusEntryPoint(HttpStatus.FORBIDDEN), new AntPathRequestMatcher("/api/**"));
+
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 }

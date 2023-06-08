@@ -26,12 +26,34 @@ public class Customer extends CreateUpdateTimeStamp implements UserDetails {
 
   @NotNull private String lastName;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
+
+  @Column(nullable = false, unique = true)
+  private String userName;
 
   private String phone;
 
+  @Column(nullable = false)
   private String password;
+
+  private String status;
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
   @OneToMany(mappedBy = "customer")
   private Set<CustomerAddress> customerAddressSet;
@@ -148,4 +170,6 @@ public class Customer extends CreateUpdateTimeStamp implements UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+
 }

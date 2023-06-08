@@ -1,10 +1,9 @@
 package com.bnd.ecommerce.entity.order;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
-import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.entity.customer.Customer;
 import com.bnd.ecommerce.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;

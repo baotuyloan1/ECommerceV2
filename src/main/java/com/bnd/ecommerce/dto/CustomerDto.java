@@ -10,12 +10,11 @@ public class CustomerDto {
 
     private long id;
 
-    @NotNull
     private String firstName;
 
-    @NotNull private String lastName;
+  private String lastName;
 
-    @UniqueEmailCustomer
+//    @UniqueEmailCustomer
     private String email;
 
     private String phone;

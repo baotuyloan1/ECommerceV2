@@ -4,7 +4,7 @@ import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.repository.EmployeeRepository;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 @Component
