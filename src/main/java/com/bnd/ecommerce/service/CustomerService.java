@@ -9,4 +9,8 @@ public interface CustomerService {
     CustomerDto save(CustomerDto customerDto);
 
     CustomerDto findById(long id);
+
+    boolean isValidPassword(CustomerDto customerDto);
+
+    CustomerDto handleLoginCustomer(CustomerDto customerDto);
 }

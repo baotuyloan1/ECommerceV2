@@ -1,4 +1,4 @@
-package com.bnd.ecommerce.security;
+package com.bnd.ecommerce.security.employee;
 
 import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.service.EmployeeService;

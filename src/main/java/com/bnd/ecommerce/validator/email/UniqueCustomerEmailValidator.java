@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.validator.email;
 
 import com.bnd.ecommerce.entity.customer.Customer;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.repository.CustomerRepository;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -21,7 +22,8 @@ public class UniqueCustomerEmailValidator
     if (value == null) {
       return false;
     }
-    Customer customerDto = customerRepository.findByEmail(value);
+    Customer customerDto =
+        customerRepository.findByEmail(value).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     if (customerDto != null) {
       context
           .buildConstraintViolationWithTemplate(

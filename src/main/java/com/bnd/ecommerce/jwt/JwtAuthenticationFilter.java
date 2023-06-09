@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.jwt;
 
-import com.bnd.ecommerce.security.EmployeeDetailsServiceImpl;
+import com.bnd.ecommerce.security.customer.CustomerDetailsServiceImpl;
+import com.bnd.ecommerce.security.employee.EmployeeDetailsServiceImpl;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Autowired private JwtTokenProvider jwtTokenProvider;
 
   @Autowired
-  private EmployeeDetailsServiceImpl employeeDetailsService;
+  private CustomerDetailsServiceImpl customerDetailsService;
 
   private String getJwtFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
@@ -38,14 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       String jwt = getJwtFromRequest(request);
       if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-        String email = jwtTokenProvider.getEmailFromJwt(jwt);
-        UserDetails userDetails = employeeDetailsService.loadUserByUsername(email);
+        String id = jwtTokenProvider.getIdFromJwt(jwt);
+        UserDetails userDetails = customerDetailsService.loadUserByUsername(id);
         if (userDetails != null) {
           //      neu nguoi dung hop le set thong tin cho security context
             UsernamePasswordAuthenticationToken authentication =
               new UsernamePasswordAuthenticationToken(
                   userDetails, null, userDetails.getAuthorities());
-
           authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }

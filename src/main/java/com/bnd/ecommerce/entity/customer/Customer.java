@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.entity.customer;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
+import com.bnd.ecommerce.entity.Role;
 import com.bnd.ecommerce.entity.order.Order;
 import com.bnd.ecommerce.enums.GenderEnum;
 import java.util.Collection;
@@ -39,6 +40,21 @@ public class Customer extends CreateUpdateTimeStamp implements UserDetails {
 
   private String status;
 
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "customer_roles",
+      joinColumns = @JoinColumn(name = "customer_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roleSet = new HashSet<>();
+
+  public Set<Role> getRoleSet() {
+    return roleSet;
+  }
+
+  public void setRoleSet(Set<Role> roles) {
+    this.roleSet = roles;
+  }
+
   public String getUserName() {
     return userName;
   }
@@ -55,13 +71,14 @@ public class Customer extends CreateUpdateTimeStamp implements UserDetails {
     this.status = status;
   }
 
-  @OneToMany(mappedBy = "customer")
-  private Set<CustomerAddress> customerAddressSet;
 
+  @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+  private Set<CustomerAddress> customerAddressSet = new HashSet<>();
 
   public void setPassword(String password) {
     this.password = password;
   }
+
 
 
   public Set<CustomerAddress> getCustomerAddressSet() {

@@ -1,91 +1,117 @@
 package com.bnd.ecommerce.dto;
 
+import com.bnd.ecommerce.entity.Role;
 import com.bnd.ecommerce.enums.GenderEnum;
-import com.bnd.ecommerce.validator.email.UniqueEmailCustomer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CustomerDto {
 
-    private long id;
+  private long id;
 
-    private String firstName;
+  private String firstName;
 
   private String lastName;
 
-//    @UniqueEmailCustomer
-    private String email;
+  //    @UniqueEmailCustomer
+  private String email;
 
-    private String phone;
+  private String phone;
 
-    private String password;
+  private String password;
 
-    private Set<CustomerAddressDto> customerAddressDtoSet;
+  private Set<CustomerAddressDto> customerAddressDtoSet = new HashSet<>();
 
-    private GenderEnum genderEnum;
 
-    public GenderEnum getGenderEnum() {
-        return genderEnum;
-    }
 
-    public void setGenderEnum(GenderEnum genderEnum) {
-        this.genderEnum = genderEnum;
-    }
+  private GenderEnum genderEnum;
 
-    public long getId() {
-        return id;
-    }
+  private String userName;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  @JsonIgnoreProperties("employees")
+  private Set<Role> roleSet = new HashSet<>();
 
-    public String getFirstName() {
-        return firstName;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public Set<Role> getRoleSet() {
+    return roleSet;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public void setRoleSet(Set<Role> roleSet) {
+    this.roleSet = roleSet;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public GenderEnum getGenderEnum() {
+    return genderEnum;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setGenderEnum(GenderEnum genderEnum) {
+    this.genderEnum = genderEnum;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public Set<CustomerAddressDto> getCustomerAddressDtoSet() {
-        return customerAddressDtoSet;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setCustomerAddressDtoSet(Set<CustomerAddressDto> customerAddressDtoSet) {
-        this.customerAddressDtoSet = customerAddressDtoSet;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public Set<CustomerAddressDto> getCustomerAddressDtoSet() {
+    return customerAddressDtoSet;
+  }
+
+  public void setCustomerAddressDtoSet(Set<CustomerAddressDto> customerAddressDtoSet) {
+    this.customerAddressDtoSet = customerAddressDtoSet;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 }

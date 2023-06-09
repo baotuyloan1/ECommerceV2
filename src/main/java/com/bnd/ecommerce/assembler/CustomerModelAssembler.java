@@ -16,7 +16,7 @@ public class CustomerModelAssembler
   public EntityModel<CustomerDto> toModel(CustomerDto entity) {
     EntityModel<CustomerDto> customerEntityModel = EntityModel.of(entity);
     customerEntityModel.add(
-        linkTo(methodOn(CustomerRestController.class).getInfo(entity.getId())).withSelfRel().withType("GET"));
+        linkTo(methodOn(CustomerRestController.class).getInfo()).withSelfRel().withType("GET"));
 //    customerEntityModel.add(
 //            linkTo(methodOn(CustomerRestController.class).getInfo(entity.getId())).withSelfRel().withType("GET"));
     return customerEntityModel;
