@@ -29,4 +29,6 @@ public interface CategoryService {
   List<Category> getRootCategoryList();
 
   void getLevelCategory(Category category, int level, List<CategoryDto> categoryDtoList);
+
+  List<CategoryDto> findSubCategoriesById (Integer id);
 }

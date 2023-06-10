@@ -30,8 +30,9 @@ public class WebSecurityConfig {
   private final ObjectMapper objectMapper;
 
   public WebSecurityConfig(
-          EmployeeDetailsServiceImpl employeeDetailsService,
-          JwtAuthenticationFilter jwtAuthenticationFilter, ObjectMapper objectMapper) {
+      EmployeeDetailsServiceImpl employeeDetailsService,
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      ObjectMapper objectMapper) {
     this.employeeDetailsService = employeeDetailsService;
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 
@@ -68,8 +69,6 @@ public class WebSecurityConfig {
         .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/rawUI/**")
         .permitAll()
-        .antMatchers("/api/products/**")
-        .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/api/customers/signin")
         .permitAll()
         .antMatchers("/api/customers/signup")
@@ -80,12 +79,12 @@ public class WebSecurityConfig {
         .authenticated()
         .antMatchers("/api/ordersdetail")
         .authenticated()
-        .antMatchers("/api/product/**")
-        .permitAll()
         .antMatchers("/api/**")
         .permitAll()
-        .anyRequest()
-        .authenticated()
+        .antMatchers("/images/**")
+        .permitAll()
+//        .anyRequest()
+//        .authenticated()
         .and()
         .formLogin()
         .loginPage("/rawUI/login")
@@ -101,7 +100,10 @@ public class WebSecurityConfig {
         .permitAll()
         .and()
         .exceptionHandling()
-        .accessDeniedHandler(new MyAccessDeniedHandler() {}).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .accessDeniedHandler(new MyAccessDeniedHandler() {})
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     //
     http.exceptionHandling()
         .defaultAuthenticationEntryPointFor(

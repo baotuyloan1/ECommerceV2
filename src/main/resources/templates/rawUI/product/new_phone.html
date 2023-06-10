@@ -10,6 +10,11 @@
         color: red;
         font-style: italic;
     }
+
+    #imageDetails {
+        display: flex;
+        gap: 20px;
+    }
 </style>
 <body>
 <div align="center">
@@ -26,15 +31,22 @@
 
             <tr>
                 <td>Main Image:</td>
-                <td><input type="file" name="imageProduct" accept="image/png, image/jpeg"/></td>
+                <td><input id="inputMainImg" type="file" name="imageProduct" accept="image/png, image/jpeg"/></td>
                 <td th:if="${imageIsEmpty}" class="error" th:text="${imageEmptyError}"></td>
             </tr>
 
+            <tr id="mainImage"></tr>
+
+
             <tr>
                 <td>Image details:</td>
-                <td><input type="file" name="imagesDetail" accept="image/png, image/jpeg"/></td>
-                <td><input type="file" name="imagesDetail" accept="image/png, image/jpeg"/></td>
-                <td><input type="file" name="imagesDetail" accept="image/png, image/jpeg"/></td>
+                <td><input id="inputImgDetail" type="file" name="imagesDetail" multiple accept="image/png, image/jpeg"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="imageDetails"></div>
+                </td>
             </tr>
             <tr>
                 <td>Brand:</td>
@@ -126,5 +138,45 @@
         </table>
     </form>
 </div>
+
+<script>
+    const mainImg = document.getElementById("mainImage")
+    const inputMainImg = document.getElementById("inputMainImg")
+    let mainImgOld = [];
+    inputMainImg.onchange = function (e) {
+        if (mainImgOld[0]) {
+            URL.revokeObjectURL(mainImgOld[0])
+            mainImgOld = [];
+        }
+        const srcImgMain = URL.createObjectURL(e.target.files[0])
+        console.log(srcImgMain);
+        mainImgOld[0] = srcImgMain;
+        mainImg.innerHTML = `<img src=${srcImgMain} style="width: 100px; height: 100%" />`;
+    }
+
+    const inputImgDetail = document.getElementById("inputImgDetail")
+    const imageDetailsTag = document.getElementById("imageDetails");
+    let imgDetailOld = [];
+    inputImgDetail.onchange = function (e) {
+        if (imgDetailOld.length > 0) {
+            for (let i = 0; i < imgDetailOld.length; i++) {
+                URL.revokeObjectURL(imgDetailOld[i]);
+
+            }
+            imgDetailOld = [];
+        }
+        console.log(imgDetailOld)
+        const files = e.target.files;
+        let htmlString = '';
+        for (let i = 0; i < files.length; i++) {
+            let img = URL.createObjectURL(files[i])
+            htmlString += `<span><img src=${img} style="width: 100px; height: 100%"/></span>`
+            imgDetailOld.push(img);
+        }
+
+
+        imageDetailsTag.innerHTML = htmlString;
+    }
+</script>
 </body>
 </html>

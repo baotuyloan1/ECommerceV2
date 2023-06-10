@@ -206,6 +206,11 @@ public class ProductServiceImpl implements ProductService {
         imageDetailDto.setUrl(
             "/images/tablet-photos/" + productDto.getId() + "/" + imageDetailDto.getName());
     }
+
+    Category mainCategory = getMainCategory(foundProduct.getCategorySet());
+
+    productDto.setMainCategoryDto(mapStructMapper.categoryToCategoryDto(mainCategory));
+
     return productDto;
   }
 
@@ -251,25 +256,25 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product update(ProductDto productDto, MultipartFile multipartFile) {
-    //    Category category = mapStructMapper.categoryDtoToCategory(productDto.getCategoryDto());
-    //    Set<Category> categories = new HashSet<>();
-    //    findRootCategory(category, categories);
+        Category category = mapStructMapper.categoryDtoToCategory(productDto.getMainCategoryDto());
+        Set<Category> categories = new HashSet<>();
+        findRootCategory(category, categories);
     if (productDto instanceof PhoneDto phoneDto) {
       updateImage(phoneDto, multipartFile, PHONE_DIR);
       Phone updatedPhone = mapStructMapper.phoneDtoToPhone(phoneDto);
-      //      updatedPhone.setCategorySet(categories);
+            updatedPhone.setCategorySet(categories);
       return phoneRepository.save(updatedPhone);
     }
     if (productDto instanceof LaptopDto laptopDto) {
       updateImage(laptopDto, multipartFile, LAPTOP_DIR);
       Laptop updatedLaptop = mapStructMapper.laptopDtoToLaptop(laptopDto);
-      //      updatedLaptop.setCategorySet(categories);
+            updatedLaptop.setCategorySet(categories);
       return laptopRepository.save(updatedLaptop);
     }
     if (productDto instanceof TabletDto tabletDto) {
       updateImage(tabletDto, multipartFile, TABLET_DIR);
       Tablet updatedTablet = mapStructMapper.tabletDtoToTablet(tabletDto);
-      //      updatedTablet.setCategorySet(categories);
+            updatedTablet.setCategorySet(categories);
       return tabletRepository.save(updatedTablet);
     }
     return null;
