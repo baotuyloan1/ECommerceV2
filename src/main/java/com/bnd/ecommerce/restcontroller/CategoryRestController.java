@@ -82,4 +82,11 @@ public class CategoryRestController {
       @RequestParam(value = "categoryId") Integer categoryId) {
     return ResponseEntity.ok(categoryService.findSubCategoriesById(categoryId));
   }
+
+  @GetMapping("/root-categories")
+  public CollectionModel<EntityModel<CategoryDto>> rootCategories() {
+//    Set<EntityModel<CategoryDto>> categoryEntityModelList = new LinkedHashSet<>();
+    List<CategoryDto> categoryDtoList = categoryService.getRootCategoryDtoList();
+    return categoryModelAssembler.toCollectionModel(categoryDtoList);
+  }
 }

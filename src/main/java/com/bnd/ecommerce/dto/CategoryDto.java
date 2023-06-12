@@ -3,11 +3,13 @@ package com.bnd.ecommerce.dto;
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
 
+@Relation(collectionRelation = "categories")
 public class CategoryDto extends CreateUpdateTimeStamp {
 
     private int id;

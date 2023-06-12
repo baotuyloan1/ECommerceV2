@@ -67,8 +67,10 @@ public class WebSecurityConfig {
         .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
         .antMatchers("/rawUI/manager/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
-        .antMatchers("/rawUI/**")
+        .antMatchers("/rawUI/")
         .permitAll()
+        .antMatchers("/rawUI/**")
+        .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/api/customers/signin")
         .permitAll()
         .antMatchers("/api/customers/signup")
@@ -83,8 +85,8 @@ public class WebSecurityConfig {
         .permitAll()
         .antMatchers("/images/**")
         .permitAll()
-//        .anyRequest()
-//        .authenticated()
+        //        .anyRequest()
+        //        .authenticated()
         .and()
         .formLogin()
         .loginPage("/rawUI/login")
@@ -103,7 +105,7 @@ public class WebSecurityConfig {
         .accessDeniedHandler(new MyAccessDeniedHandler() {})
         .and()
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     //
     http.exceptionHandling()
         .defaultAuthenticationEntryPointFor(

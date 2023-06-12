@@ -95,6 +95,15 @@ public class CategoryServiceImpl implements CategoryService {
     return categoryRepository.rootCategoryList();
   }
 
+  @Override
+  public List<CategoryDto> getRootCategoryDtoList() {
+    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    for (Category category : categoryRepository.rootCategoryList()) {
+      categoryDtoList.add(mapStructMapper.categoryToCategoryDto(category));
+    }
+    return categoryDtoList;
+  }
+
   public void getLevelCategory(Category category, int level, List<CategoryDto> categoryDtoList) {
     if (category != null) {
       CategoryDto categoryDto = mapStructMapper.categoryToCategoryDto(category);
@@ -112,22 +121,23 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Parent category not found"));
-    List<Category> categoryDtoList = new ArrayList<>();
-    findMainCategory(parentCategory, categoryDtoList);
-    System.out.println(categoryDtoList);
-    return null;
+    List<Category> categoryList = new ArrayList<>();
+    findMainCategory(parentCategory, categoryList);
+    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    for (Category category : categoryList) {
+      categoryDtoList.add(mapStructMapper.categoryToCategoryDto(category));
+    }
+    return categoryDtoList;
   }
 
-  public List<Category> findMainCategory(
-      Category categoryParent, List<Category> categoryMainList) {
+  public void findMainCategory(Category categoryParent, List<Category> categoryMainList) {
 
     for (Category categoryChild : categoryParent.getChildren()) {
       if (categoryChild.getChildren().isEmpty()) {
-        categoryMainList.add(categoryChild);}
-      else{
-          findMainCategory(categoryChild, categoryMainList);
+        categoryMainList.add(categoryChild);
+      } else {
+        findMainCategory(categoryChild, categoryMainList);
       }
     }
-    return  categoryMainList;
   }
 }

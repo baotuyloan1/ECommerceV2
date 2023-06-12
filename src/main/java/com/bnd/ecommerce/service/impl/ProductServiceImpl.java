@@ -16,12 +16,11 @@ import com.bnd.ecommerce.service.ProductService;
 import com.bnd.ecommerce.util.FileUtil;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-  private ProductRepository productRepository;
-  private PhoneRepository phoneRepository;
+  private final ProductRepository productRepository;
+  private final PhoneRepository phoneRepository;
 
   private final MapStructMapper mapStructMapper;
 
@@ -256,25 +255,25 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product update(ProductDto productDto, MultipartFile multipartFile) {
-        Category category = mapStructMapper.categoryDtoToCategory(productDto.getMainCategoryDto());
-        Set<Category> categories = new HashSet<>();
-        findRootCategory(category, categories);
+    Category category = mapStructMapper.categoryDtoToCategory(productDto.getMainCategoryDto());
+    Set<Category> categories = new HashSet<>();
+    findRootCategory(category, categories);
     if (productDto instanceof PhoneDto phoneDto) {
       updateImage(phoneDto, multipartFile, PHONE_DIR);
       Phone updatedPhone = mapStructMapper.phoneDtoToPhone(phoneDto);
-            updatedPhone.setCategorySet(categories);
+      updatedPhone.setCategorySet(categories);
       return phoneRepository.save(updatedPhone);
     }
     if (productDto instanceof LaptopDto laptopDto) {
       updateImage(laptopDto, multipartFile, LAPTOP_DIR);
       Laptop updatedLaptop = mapStructMapper.laptopDtoToLaptop(laptopDto);
-            updatedLaptop.setCategorySet(categories);
+      updatedLaptop.setCategorySet(categories);
       return laptopRepository.save(updatedLaptop);
     }
     if (productDto instanceof TabletDto tabletDto) {
       updateImage(tabletDto, multipartFile, TABLET_DIR);
       Tablet updatedTablet = mapStructMapper.tabletDtoToTablet(tabletDto);
-            updatedTablet.setCategorySet(categories);
+      updatedTablet.setCategorySet(categories);
       return tabletRepository.save(updatedTablet);
     }
     return null;
@@ -310,5 +309,114 @@ public class ProductServiceImpl implements ProductService {
       productDtoList.add(getProductDto(product));
     }
     return productDtoList;
+  }
+
+  @Override
+  public Page<ProductDto> filterPage(
+      List<Integer> categories, List<Integer> brands, String sortDir, int pageNum, int maxPrice) {
+    Set<ProductDto> result = null;
+    List<ProductDto> productDtoList = productDtoList();
+    if (categories != null && !categories.isEmpty() || brands != null && !brands.isEmpty()) {
+      result = new HashSet<>();
+      filterCategory(categories, result, productDtoList);
+      filterBrand(brands, result, productDtoList);
+    } else {
+      result = new HashSet<>(productDtoList);
+    }
+    List<ProductDto> resultList = new ArrayList<>(result);
+    resultList = filterPrice(maxPrice, resultList);
+    sortResult(sortDir, resultList);
+    int size = Math.min(6,resultList.size());
+    if (size == 0 ) size = 1;
+    Pageable pageable = PageRequest.of(pageNum - 1, size);
+    int start = (int) pageable.getOffset();
+    int end = Math.min((start + pageable.getPageSize()), resultList.size());
+    return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+  }
+
+  private List<ProductDto> filterPrice(int maxPrice, List<ProductDto> result) {
+    return result.stream().filter(p -> p.getPrice() >= maxPrice).collect(Collectors.toList());
+  }
+
+  private void sortResult(String sortDir, List<ProductDto> resultList) {
+    if (sortDir != null && !sortDir.isEmpty()) {
+      if (sortDir.equals("asc")) {
+        quickSort(resultList, 0, resultList.size() - 1);
+      } else {
+        quickSortReverse(resultList, 0, resultList.size() - 1);
+      }
+    }
+  }
+
+  private static void filterBrand(
+      List<Integer> brands, Set<ProductDto> result, List<ProductDto> productDtoList) {
+    if (brands != null && !brands.isEmpty()) {
+      for (ProductDto productDto : productDtoList) {
+        if (brands.contains(productDto.getBrandDto().getId())) {
+          result.add(productDto);
+        }
+      }
+    }
+  }
+
+  private static void filterCategory(
+      List<Integer> categories, Set<ProductDto> result, List<ProductDto> productDtoList) {
+    if (categories != null && !categories.isEmpty()) {
+      for (ProductDto productDto : productDtoList) {
+        for (CategoryDto categoryDto : productDto.getCategoryDtoSet()) {
+          if (categories.contains(categoryDto.getId())) {
+            result.add(productDto);
+          }
+        }
+      }
+    }
+  }
+
+  private void quickSort(List<ProductDto> productDtoList, int low, int high) {
+    if (low < high) {
+      int pivotIndex = partition(productDtoList, low, high);
+      quickSort(productDtoList, low, pivotIndex - 1);
+      quickSort(productDtoList, pivotIndex + 1, high);
+    }
+  }
+
+  private int partition(List<ProductDto> productDtoList, int low, int high) {
+    ProductDto pivot = productDtoList.get(high);
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+      if (productDtoList.get(j).getPrice() < pivot.getPrice()) {
+        i++;
+        swap(productDtoList, i, j);
+      }
+    }
+    swap(productDtoList, i + 1, high);
+    return i + 1;
+  }
+
+  private void swap(List<ProductDto> productDtoList, int i, int j) {
+    ProductDto temp = productDtoList.get(i);
+    productDtoList.set(i, productDtoList.get(j));
+    productDtoList.set(j, temp);
+  }
+
+  public void quickSortReverse(List<ProductDto> productDtoList, int low, int high) {
+    if (low < high) {
+      int pivotIndex = partitionReverse(productDtoList, low, high);
+      quickSortReverse(productDtoList, low, pivotIndex - 1);
+      quickSortReverse(productDtoList, pivotIndex + 1, high);
+    }
+  }
+
+  private int partitionReverse(List<ProductDto> productDtoList, int low, int high) {
+    ProductDto pivot = productDtoList.get(high);
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+      if (productDtoList.get(j).getPrice() > pivot.getPrice()) {
+        i++;
+        swap(productDtoList, i, j);
+      }
+    }
+    swap(productDtoList, i + 1, high);
+    return i + 1;
   }
 }
