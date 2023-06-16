@@ -1,15 +1,17 @@
 package com.bnd.ecommerce.entity.customer;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import com.bnd.ecommerce.entity.order.OrderDetail;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class CustomerAddress extends CreateUpdateTimeStamp {
 
-  @Id private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   private String fullName;
   private String phone;
@@ -18,6 +20,7 @@ public class CustomerAddress extends CreateUpdateTimeStamp {
   @ManyToOne
   @JoinColumn(name = "customer_id")
   private Customer customer;
+
 
   public Customer getCustomer() {
     return customer;

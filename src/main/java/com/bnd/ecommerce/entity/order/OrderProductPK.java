@@ -1,6 +1,9 @@
 package com.bnd.ecommerce.entity.order;
 
 import com.bnd.ecommerce.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Embeddable;
@@ -13,10 +16,12 @@ public class OrderProductPK implements Serializable {
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id")
+  @JsonIgnoreProperties({"orderDetailList","products"})
   private Order order;
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id")
+  @JsonIgnoreProperties({"brand","stockSet","categories"})
   private Product product;
 
   public OrderProductPK(Order savedOrder, Product product) {

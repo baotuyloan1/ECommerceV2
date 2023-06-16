@@ -59,34 +59,48 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
-    http.csrf()
+  public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.antMatcher("/api/**")
+        .csrf()
         .disable()
         .authorizeRequests()
+        .antMatchers("/api/customers/signin")
+        .permitAll()
+        .antMatchers("/api/customers/signup")
+        .permitAll()
+        //        .antMatchers("/api/customers/getInfo")
+        //        .hasAnyAuthority("USER")
+        .antMatchers("/api/customers/**")
+        .authenticated()
+        .antMatchers("/api/orders/**")
+        .authenticated()
+        .antMatchers("/api/ordersdetail")
+        .authenticated()
+        .antMatchers("/api/**")
+        .permitAll()
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//    http.exceptionHandling()
+//        .defaultAuthenticationEntryPointFor(
+//            new JsonAuthenticationEntryPoint(objectMapper), new AntPathRequestMatcher("/api/**"));
+    return http.build();
+  }
+
+  @Bean
+  public SecurityFilterChain backendSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
         .antMatchers("/rawUI/admin/**")
-        .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
+        .hasAnyAuthority("ADMIN")
         .antMatchers("/rawUI/manager/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/rawUI/")
         .permitAll()
         .antMatchers("/rawUI/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
-        .antMatchers("/api/customers/signin")
-        .permitAll()
-        .antMatchers("/api/customers/signup")
-        .permitAll()
-        .antMatchers("/api/customers/getInfo")
-        .hasAnyAuthority("USER")
-        .antMatchers("/api/orders")
-        .authenticated()
-        .antMatchers("/api/ordersdetail")
-        .authenticated()
-        .antMatchers("/api/**")
-        .permitAll()
         .antMatchers("/images/**")
         .permitAll()
-        //        .anyRequest()
-        //        .authenticated()
         .and()
         .formLogin()
         .loginPage("/rawUI/login")
@@ -106,11 +120,7 @@ public class WebSecurityConfig {
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-    //
-    http.exceptionHandling()
-        .defaultAuthenticationEntryPointFor(
-            new JsonAuthenticationEntryPoint(objectMapper), new AntPathRequestMatcher("/api/**"));
-    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
   }
 }

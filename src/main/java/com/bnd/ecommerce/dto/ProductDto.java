@@ -4,7 +4,6 @@ import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.validator.product.UniqueProductName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Objects;
@@ -78,7 +77,8 @@ public class ProductDto extends CreateUpdateTimeStamp {
 
   private Set<ProductLogDto> productLogDtoSet = new HashSet<>();
 
- private Set<ImageDetailDto> imageDetailDtoSet = new HashSet<>();
+  @JsonProperty("imagesDetail")
+  private Set<ImageDetailDto> imageDetailDtoSet = new HashSet<>();
 
   public long getId() {
     return id;
@@ -159,16 +159,16 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.categoryDtoSet = categoryDtoSet;
   }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductDto that = (ProductDto) o;
-        return id == that.id;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ProductDto that = (ProductDto) o;
+    return id == that.id;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

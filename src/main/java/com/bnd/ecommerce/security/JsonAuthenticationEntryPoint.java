@@ -31,7 +31,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     ErrorItem errorItem = new ErrorItem();
     errorItem.setCode(HttpServletResponse.SC_FORBIDDEN + "");
-    errorItem.setMessage("Access Denied");
+    errorItem.setMessage("Access Denied 1" );
     String jsonErrorResponse = objectMapper.writeValueAsString(errorItem);
     OutputStream out = response.getOutputStream();
     out.write(jsonErrorResponse.getBytes());

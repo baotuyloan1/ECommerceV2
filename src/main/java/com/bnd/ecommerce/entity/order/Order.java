@@ -2,7 +2,10 @@ package com.bnd.ecommerce.entity.order;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.customer.Customer;
+import com.bnd.ecommerce.entity.customer.CustomerAddress;
 import com.bnd.ecommerce.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,8 +24,9 @@ public class Order extends CreateUpdateTimeStamp {
 
   @ManyToOne(cascade = CascadeType.ALL)
   @NotNull
-  @JoinColumn(name = "customer_id")
-  private Customer customer;
+  @JoinColumn(name = "customer_address_id")
+  @JsonIgnoreProperties("customer")
+  private CustomerAddress customerAddress;
 
   @Column(name = "order_date")
   private Timestamp createTime;
@@ -32,7 +36,14 @@ public class Order extends CreateUpdateTimeStamp {
 
   @OneToMany(mappedBy = "pk.order")
   @Valid
+  @JsonProperty("products")
   private List<OrderDetail> orderDetailList = new ArrayList<>();
+
+  private float totalPrice;
+
+  public void setTotalPrice(float totalPrice) {
+    this.totalPrice = totalPrice;
+  }
 
   public long getId() {
     return id;
@@ -42,12 +53,12 @@ public class Order extends CreateUpdateTimeStamp {
     this.id = id;
   }
 
-  public Customer getCustomer() {
-    return customer;
+  public CustomerAddress getCustomerAddress() {
+    return customerAddress;
   }
 
-  public void setCustomer(Customer customer) {
-    this.customer = customer;
+  public void setCustomerAddress(CustomerAddress customerAddress) {
+    this.customerAddress = customerAddress;
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.bnd.ecommerce.mapper;
 import com.bnd.ecommerce.dto.*;
 import com.bnd.ecommerce.entity.*;
 import com.bnd.ecommerce.entity.customer.Customer;
+import com.bnd.ecommerce.entity.customer.CustomerAddress;
 import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.stock.Stock;
 import com.bnd.ecommerce.entity.stock.Warehouse;
@@ -80,4 +81,10 @@ public interface MapStructMapper {
 
   @InheritInverseConfiguration(name = "customerDtoToCustomer")
   CustomerDto customerToCustomerDto(Customer customer);
+
+//  @Mapping(source = "customerDto", target = "customer")
+  CustomerAddress customerAddressDtoToCustomerAddress(CustomerAddressDto customerAddressDto);
+
+//  @InheritInverseConfiguration(name = "customerAddressDtoToCustomerAddress")
+  CustomerAddressDto customerAddressToCustomerAddressDto(CustomerAddress customerAddress);
 }

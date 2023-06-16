@@ -2,6 +2,7 @@ package com.bnd.ecommerce.entity.order;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
@@ -9,7 +10,6 @@ import javax.persistence.*;
 @Table(name = "order_detail")
 public class OrderDetail extends CreateUpdateTimeStamp {
 
-  @JsonIgnoreProperties(value = {"order"})
   @EmbeddedId
   private OrderProductPK pk;
 

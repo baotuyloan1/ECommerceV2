@@ -102,16 +102,11 @@ public class Customer extends CreateUpdateTimeStamp implements UserDetails {
     this.genderEnum = gender;
   }
 
-  public Set<Order> getOrders() {
-    return orders;
-  }
 
-  public void setOrders(Set<Order> orders) {
-    this.orders = orders;
-  }
 
-  @OneToMany(mappedBy = "customer")
-  public Set<Order> orders = new HashSet<>();
+
+
+
 
   public long getId() {
     return id;

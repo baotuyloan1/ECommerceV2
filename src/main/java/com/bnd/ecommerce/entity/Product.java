@@ -2,6 +2,7 @@ package com.bnd.ecommerce.entity;
 
 import com.bnd.ecommerce.entity.stock.Stock;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -49,7 +52,7 @@ public class Product extends CreateUpdateTimeStamp {
       name = "product_category",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
-//  @JsonManagedReference
+  @JsonIgnoreProperties({"children","products"})
   private Set<Category> categorySet;
 
   private String image;

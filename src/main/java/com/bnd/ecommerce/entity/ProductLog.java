@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Table(name = "product_log")
 public class ProductLog extends CreateTimestamp {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
