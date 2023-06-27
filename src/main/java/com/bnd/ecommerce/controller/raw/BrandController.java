@@ -6,6 +6,7 @@ import com.bnd.ecommerce.exception.CreateFailException;
 import com.bnd.ecommerce.exception.UpdateFailException;
 import com.bnd.ecommerce.service.BrandService;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,7 @@ public class BrandController {
   }
 
   private static List<String> getStringRoles(Authentication authentication) {
-    List<String> currentRoles = new ArrayList<>();
+    List<String> currentRoles = new LinkedList<>();
     for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
       currentRoles.add(grantedAuthority.getAuthority());
     }

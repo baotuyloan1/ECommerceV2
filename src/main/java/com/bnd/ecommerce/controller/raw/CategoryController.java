@@ -8,6 +8,7 @@ import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.service.CategoryService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -46,7 +47,7 @@ public class CategoryController {
   @GetMapping("/createCategory")
   public String showCreateCategory(Model model) {
     Category category = new Category();
-    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    List<CategoryDto> categoryDtoList = new LinkedList<>();
     List<Category> rootCategoryList = categoryService.getRootCategoryList();
     for (Category item : rootCategoryList) {
       categoryService.getLevelCategory(item, 0, categoryDtoList);

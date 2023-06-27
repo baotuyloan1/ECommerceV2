@@ -39,12 +39,9 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public Category findById(int id) {
-    Optional<Category> category = categoryRepository.findById(id);
-    if (category.isPresent()) {
-      return category.get();
-    } else {
-      throw new ResourceNotFoundException("Category not found");
-    }
+    return categoryRepository
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
   }
 
   @Override
@@ -55,8 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public boolean deleteById(int id) {
     categoryRepository.deleteById(id);
-    boolean isDeleted = categoryRepository.existsById(id);
-    return !isDeleted;
+    return !categoryRepository.existsById(id);
   }
 
   public Page<Category> listAll(int pageNum, String sortField, String sortDir, int size) {

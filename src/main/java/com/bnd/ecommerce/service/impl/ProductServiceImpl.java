@@ -303,7 +303,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<ProductDto> productDtoList() {
-    List<ProductDto> productDtoList = new ArrayList<>();
+    List<ProductDto> productDtoList = new LinkedList<>();
     List<Product> productList = productRepository.findAll();
     for (Product product : productList) {
       productDtoList.add(getProductDto(product));

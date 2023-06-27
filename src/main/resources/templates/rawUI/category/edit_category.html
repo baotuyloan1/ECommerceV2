@@ -9,6 +9,7 @@
     <h1>Create New Category</h1>
     <br/>
     <form th:action="@{'/rawUI/categories/updateCategory/'+${category.id}}" th:object="${category}" method="post">
+        <input type="hidden" th:field="*{id}"/>
         <table th:border="0" th:cellpadding="10">
             <tr>
                 <td><label>Category name:

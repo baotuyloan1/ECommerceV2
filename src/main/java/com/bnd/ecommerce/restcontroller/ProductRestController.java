@@ -39,7 +39,7 @@ public class ProductRestController {
 
   @GetMapping(value = {"", "/"})
   public @NotNull CollectionModel<EntityModel<ProductDto>> getProducts() {
-    List<EntityModel<ProductDto>> productModelList = new ArrayList<>();
+    List<EntityModel<ProductDto>> productModelList = new LinkedList<>();
     List<ProductDto> productDtoList = productService.productDtoList();
     for (ProductDto productDto : productDtoList) {
       productModelList.add(productModelAssembler.toModel(productDto));
