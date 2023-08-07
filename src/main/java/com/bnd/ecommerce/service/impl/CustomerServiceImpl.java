@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.CustomerDto;
+import com.bnd.ecommerce.dto.api.CustomerDtoLogin;
 import com.bnd.ecommerce.entity.Role;
 import com.bnd.ecommerce.entity.customer.Customer;
 import com.bnd.ecommerce.exception.ResourceNotFoundException;
@@ -58,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerDto handleLoginCustomer(CustomerDto customerDto) {
+  public CustomerDto handleLoginCustomer(CustomerDtoLogin customerDto) {
     Customer customer =
         customerRepository
             .findByUserName(customerDto.getUserName())

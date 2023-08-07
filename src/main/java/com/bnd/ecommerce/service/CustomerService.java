@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.service;
 
 import com.bnd.ecommerce.dto.CustomerDto;
+import com.bnd.ecommerce.dto.api.CustomerDtoLogin;
 import com.bnd.ecommerce.entity.customer.Customer;
 
 public interface CustomerService {
@@ -12,5 +13,5 @@ public interface CustomerService {
 
     boolean isValidPassword(CustomerDto customerDto);
 
-    CustomerDto handleLoginCustomer(CustomerDto customerDto);
+    CustomerDto handleLoginCustomer(CustomerDtoLogin customerDto);
 }

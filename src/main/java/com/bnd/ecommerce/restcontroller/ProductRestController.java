@@ -52,7 +52,7 @@ public class ProductRestController {
       @RequestParam(value = "categories", required = false) List<Integer> categories,
       @RequestParam(value = "brands", required = false) List<Integer> brands,
       @RequestParam(value = "sortPrice", required = false) String sortDir,
-      @RequestParam(value = "maxPrice", required = false) int maxPrice,
+      @RequestParam(value = "maxPrice", required = false, defaultValue = "1000") int maxPrice,
       @PathVariable(value = "page") int page) {
 
     return ResponseEntity.ok(productService.filterPage(categories, brands, sortDir, page, maxPrice));

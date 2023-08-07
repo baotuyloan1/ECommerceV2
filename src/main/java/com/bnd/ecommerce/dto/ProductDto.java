@@ -12,10 +12,15 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductDto extends CreateUpdateTimeStamp {
+  @Schema(name = "Product ID", example = "1", required = true)
   private long id;
+
+
 
   @Column(nullable = false, length = 512)
   @NotBlank(message = "Product name cannot blank")

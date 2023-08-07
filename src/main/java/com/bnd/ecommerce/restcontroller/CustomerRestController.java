@@ -3,6 +3,7 @@ package com.bnd.ecommerce.restcontroller;
 import com.bnd.ecommerce.assembler.CustomerModelAssembler;
 import com.bnd.ecommerce.dto.CustomerAddressDto;
 import com.bnd.ecommerce.dto.CustomerDto;
+import com.bnd.ecommerce.dto.api.CustomerDtoLogin;
 import com.bnd.ecommerce.jwt.JwtTokenProvider;
 import com.bnd.ecommerce.security.customer.CustomerDetails;
 import com.bnd.ecommerce.service.CustomerAddressService;
@@ -44,7 +45,7 @@ public class CustomerRestController {
 
   @PostMapping("/signin")
   public ResponseEntity<?> loginCustomer(
-      @Valid @RequestBody CustomerDto customerDto, BindingResult bindingResult) {
+          @Valid @RequestBody CustomerDtoLogin customerDto, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }

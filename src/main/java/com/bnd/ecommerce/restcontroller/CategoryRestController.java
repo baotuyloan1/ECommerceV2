@@ -7,6 +7,12 @@ import com.bnd.ecommerce.assembler.CategoryModelAssembler;
 import com.bnd.ecommerce.dto.CategoryDto;
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Category", description = "Category management APIs")
 @RestController
 @RequestMapping("/api/categories")
 @Validated
@@ -40,6 +47,13 @@ public class CategoryRestController {
     return categoryService.findById(id);
   }
 
+  @Operation(
+      summary = "Retrieve a list categories",
+      description = "Get a list categories. A response is hateoas with links and content.",
+      tags = {"categories", "get"})
+  @ApiResponses({
+          @ApiResponse(responseCode = "200",content = {@Content(schema = @Schema(implementation = CategoryRestController.class),mediaType = "application/json")})
+  })
   @GetMapping
   @ResponseBody
   @ResponseStatus(HttpStatus.OK)
@@ -85,7 +99,7 @@ public class CategoryRestController {
 
   @GetMapping("/root-categories")
   public CollectionModel<EntityModel<CategoryDto>> rootCategories() {
-//    Set<EntityModel<CategoryDto>> categoryEntityModelList = new LinkedHashSet<>();
+    //    Set<EntityModel<CategoryDto>> categoryEntityModelList = new LinkedHashSet<>();
     List<CategoryDto> categoryDtoList = categoryService.getRootCategoryDtoList();
     return categoryModelAssembler.toCollectionModel(categoryDtoList);
   }
